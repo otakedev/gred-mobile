@@ -8,6 +8,7 @@ const kColorSecondary = const Color(0xFF45454C);
 const kColorAccent = const Color(0xFFF77DD47);
 const kColorBackground = const Color(0xFFF6F8FD);
 const kColorWhite = const Color(0xFFFFFFFFF);
+const kColorGreen = const Color(0xFF77DD47);
 
 MaterialColor generateMaterialColor(Color color) {
   return MaterialColor(color.value, {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/core/storage.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_model.dart';
 import 'package:gred_mobile/screens/recipe-page/components/cook_level.dart';
@@ -72,7 +73,20 @@ class Recipe extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: RecipeList(elems: recipe.utensils, title: "Ustensiles"),
           ),
-          SizedBox(height: 100)
+          SizedBox(height: 100),
+
+          // TODO Remove , this is for testing
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                RaisedButton(
+                    onPressed: () => writeStorage("user_skill", "NOVICE"),
+                    child: Text("Novice")),
+                RaisedButton(
+                  onPressed: () => writeStorage("user_skill", "EXPERT"),
+                  child: Text("Expert"),
+                )
+              ])
         ],
       ),
     );

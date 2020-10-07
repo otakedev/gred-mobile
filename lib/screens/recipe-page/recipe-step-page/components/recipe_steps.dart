@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gred_mobile/models/recipe_help_model.dart';
+import 'package:gred_mobile/core/storage.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
@@ -23,10 +23,14 @@ class _RecipeStepsState extends State<RecipeSteps> {
 
   void _onPageViewChange(int page) {
     _currentPage = page;
-    setState(() {
+    setState(() async {
+      var r = await readStorage("user_skill");
+      print("user_skill: " + r);
       _isHelpVisible = recipes[page].help != null;
     });
   }
+
+  void checkSkill() {}
 
   int Function() _previousPage() {
     return () => _currentPage - 1;
@@ -60,7 +64,9 @@ class _RecipeStepsState extends State<RecipeSteps> {
   Widget helpButton(IconData icon, void Function() onPressed,
           {style = ButtonTextTheme.primary}) =>
       RaisedButton(
-        color: kColorSecondary,
+        color: readStorage("user_skill") == "NOVICE"
+            ? kColorGreen
+            : kColorSecondary,
         textTheme: style,
         onPressed: () {
           showDialog(

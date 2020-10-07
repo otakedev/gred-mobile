@@ -16,7 +16,10 @@ class RecipePage extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text('${recipe?.title ?? "Recipe"}')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('${recipe?.title ?? "Recipe"}'),
+      ),
       body: Recipe(recipe),
       floatingActionButton: FloatingActionButton.extended(
         label: Text('Start Cooking !', style: TextStyle(color: kColorWhite)),

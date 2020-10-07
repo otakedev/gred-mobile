@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/core/storage.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
+import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_step.dart';
@@ -19,13 +20,14 @@ class _RecipeStepsState extends State<RecipeSteps> {
   bool _isHelpVisible = true;
   List<RecipeStepModel> recipes;
 
-  PageController _controller = PageController(initialPage: 0);
+  PageController _controller = PageController();
 
   void _onPageViewChange(int page) {
     _currentPage = page;
-    setState(() async {
-      var r = await readStorage("user_skill");
-      print("user_skill: " + r);
+    setState(() {
+      // var r = await readStorage("user_skill");
+      // print("user_skill: " + r);
+      _currentPage = page;
       _isHelpVisible = recipes[page].help != null;
     });
   }
@@ -44,7 +46,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
       () => _controller.animateToPage(
             fn(),
             duration: Duration(milliseconds: 200),
-            curve: Curves.linear,
+            curve: Curves.ease,
           );
 
   @override
@@ -54,25 +56,18 @@ class _RecipeStepsState extends State<RecipeSteps> {
   }
 
   Widget stepButton(IconData icon, void Function() onPressed,
-          {style = ButtonTextTheme.primary}) =>
-      RaisedButton(
-        textTheme: style,
-        onPressed: onPressed,
-        child: Icon(icon, size: 40),
-      );
-
-  Widget helpButton(IconData icon, void Function() onPressed,
-          {style = ButtonTextTheme.primary}) =>
-      RaisedButton(
-        color: readStorage("user_skill") == "NOVICE"
-            ? kColorGreen
-            : kColorSecondary,
-        textTheme: style,
-        onPressed: () {
-          showDialog(
-              context: context, builder: (_) => HelpDialog(_currentPage));
-        },
-        child: Icon(icon, size: 40),
+          {style = ButtonTextTheme.primary, color: kColorPrimary}) =>
+      ButtonTheme(
+        minWidth: 50.0,
+        height: 50.0,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        child: RaisedButton(
+          color: color,
+          textTheme: style,
+          onPressed: onPressed,
+          child: Icon(icon, size: 40),
+        ),
       );
 
   @override
@@ -100,11 +95,27 @@ class _RecipeStepsState extends State<RecipeSteps> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  stepButton(Icons.arrow_back, _updatePage(_previousPage())),
-                  Visibility(
-                      child: helpButton(Icons.help_outline, () {}),
-                      visible: _isHelpVisible),
-                  stepButton(Icons.arrow_forward, _updatePage(_nextPage())),
+                  stepButton(
+                    _currentPage < 1 ? Icons.remove : Icons.arrow_back,
+                    _updatePage(_previousPage()),
+                  ),
+                  stepButton(
+                    Icons.menu_book_rounded,
+                    ingredientsDialog(context),
+                    color: kColorSecondary,
+                  ),
+                  if (_isHelpVisible)
+                    stepButton(
+                      Icons.help_outline,
+                      helpDialog(context),
+                      color: kColorSecondary,
+                    ),
+                  stepButton(
+                    _currentPage >= itemsCount - 1
+                        ? Icons.remove
+                        : Icons.arrow_forward,
+                    _updatePage(_nextPage()),
+                  ),
                 ],
               ),
             ),
@@ -112,5 +123,37 @@ class _RecipeStepsState extends State<RecipeSteps> {
         ),
       ],
     );
+  }
+
+  void Function() helpDialog(BuildContext context) {
+    return () =>
+        showDialog(context: context, builder: (_) => HelpDialog(_currentPage));
+  }
+
+  void Function() ingredientsDialog(BuildContext context) {
+    return () {
+      var ingredients =
+          context.read<RecipeProvider>().selectedRecipe.ingredients;
+      showDialog(
+        context: context,
+        child: SimpleDialog(
+          title: Text("Un oubli ?"),
+          children: [
+            for (var i in ingredients)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('- $i', style: TextStyle(height: 1.0)),
+              ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                "C'est bon ?",
+                style: TextStyle(color: kColorPrimary),
+              ),
+            ),
+          ],
+        ),
+      );
+    };
   }
 }

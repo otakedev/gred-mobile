@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:gred_mobile/screens/home_page.dart';
+import 'package:gred_mobile/providers/recipe_provider.dart';
+import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/screens/recipe-page/recipe-step-page/recipe_step_page.dart';
+import 'package:gred_mobile/screens/recipe-page/recipe_page.dart';
 import 'package:gred_mobile/theme/style.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RecipeProvider()),
+        ChangeNotifierProxyProvider<RecipeProvider, RecipeStepProvider>(
+          create: (context) => RecipeStepProvider(),
+          update: (context, from, to) {
+            to.steps = from.selectedRecipe.steps;
+            return to;
+          },
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,7 +30,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Gred App',
       theme: appTheme(),
-      home: HomePage(),
+      initialRoute: '/recipe',
+      routes: {
+        '/recipe': (context) => RecipePage(),
+        '/steps': (context) => RecipeStepPage(),
+      },
     );
   }
 }

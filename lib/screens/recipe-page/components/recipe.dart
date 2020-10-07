@@ -80,11 +80,14 @@ class Recipe extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 RaisedButton(
-                    onPressed: () => writeStorage("user_skill", "NOVICE"),
-                    child: Text("Novice")),
+                  onPressed: () => writeStorage("user_skill", "NOVICE"),
+                  child: Text("Novice"),
+                  color: Colors.yellow,
+                ),
                 RaisedButton(
                   onPressed: () => writeStorage("user_skill", "EXPERT"),
                   child: Text("Expert"),
+                  color: Colors.yellow,
                 )
               ])
         ],

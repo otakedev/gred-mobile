@@ -23,6 +23,12 @@ const RECIPES_MOCK = [
         "imageUrl": "assets/images/pancake-step-1.png",
         "title": "Mettre tous les ingredients",
         "description": "Verser le lait, l’huile, et bien mélanger au fouet.",
+        "help": {
+          "title": "Comment éviter les grumeaux",
+          "content":
+              "Il est nécessaire d’ajouter le lait très progressivement dans la pâte afin que la farine ait le temps de l’assimiler. Il est conseillé de verser en 4 ou 5 fois sans jamais s'arrêter de fouetter.",
+          "videoSource": ""
+        }
       },
       {
         "imageUrl": "assets/images/pancake-step-2.png",

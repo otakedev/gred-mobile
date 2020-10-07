@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/models/recipe_help_model.dart';
+import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_step.dart';
+import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
 
 class RecipeSteps extends StatefulWidget {
@@ -12,11 +16,16 @@ class RecipeSteps extends StatefulWidget {
 
 class _RecipeStepsState extends State<RecipeSteps> {
   int _currentPage = 0;
+  bool _isHelpVisible = true;
+  List<RecipeStepModel> recipes;
 
   PageController _controller = PageController(initialPage: 0);
 
   void _onPageViewChange(int page) {
     _currentPage = page;
+    setState(() {
+      _isHelpVisible = recipes[page].help != null;
+    });
   }
 
   int Function() _previousPage() {
@@ -48,11 +57,26 @@ class _RecipeStepsState extends State<RecipeSteps> {
         child: Icon(icon, size: 40),
       );
 
+  Widget helpButton(IconData icon, void Function() onPressed,
+          {style = ButtonTextTheme.primary}) =>
+      RaisedButton(
+        color: kColorSecondary,
+        textTheme: style,
+        onPressed: () {
+          showDialog(
+              context: context, builder: (_) => HelpDialog(_currentPage));
+        },
+        child: Icon(icon, size: 40),
+      );
+
   @override
   Widget build(BuildContext context) {
     var itemsCount = context.select<RecipeStepProvider, int>(
       (provider) => provider.stepsCount,
     );
+
+    recipes = context.select<RecipeStepProvider, List<RecipeStepModel>>(
+        (provider) => provider.steps);
 
     return Stack(
       children: [
@@ -71,6 +95,9 @@ class _RecipeStepsState extends State<RecipeSteps> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   stepButton(Icons.arrow_back, _updatePage(_previousPage())),
+                  Visibility(
+                      child: helpButton(Icons.help_outline, () {}),
+                      visible: _isHelpVisible),
                   stepButton(Icons.arrow_forward, _updatePage(_nextPage())),
                 ],
               ),

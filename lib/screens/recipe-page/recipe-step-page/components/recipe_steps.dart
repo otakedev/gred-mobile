@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gred_mobile/models/recipe_help_model.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
+import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_step.dart';
@@ -19,11 +19,11 @@ class _RecipeStepsState extends State<RecipeSteps> {
   bool _isHelpVisible = true;
   List<RecipeStepModel> recipes;
 
-  PageController _controller = PageController(initialPage: 0);
+  PageController _controller = PageController();
 
   void _onPageViewChange(int page) {
-    _currentPage = page;
     setState(() {
+      _currentPage = page;
       _isHelpVisible = recipes[page].help != null;
     });
   }
@@ -40,7 +40,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
       () => _controller.animateToPage(
             fn(),
             duration: Duration(milliseconds: 200),
-            curve: Curves.linear,
+            curve: Curves.ease,
           );
 
   @override
@@ -50,8 +50,9 @@ class _RecipeStepsState extends State<RecipeSteps> {
   }
 
   Widget stepButton(IconData icon, void Function() onPressed,
-          {style = ButtonTextTheme.primary}) =>
+          {style = ButtonTextTheme.primary, color: kColorPrimary}) =>
       RaisedButton(
+        color: color,
         textTheme: style,
         onPressed: onPressed,
         child: Icon(icon, size: 40),
@@ -94,11 +95,24 @@ class _RecipeStepsState extends State<RecipeSteps> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  stepButton(Icons.arrow_back, _updatePage(_previousPage())),
+                  stepButton(
+                    _currentPage < 1 ? Icons.remove : Icons.arrow_back,
+                    _updatePage(_previousPage()),
+                  ),
+                  stepButton(
+                    Icons.menu_book_rounded,
+                    ingredientsDialog(context),
+                    color: kColorSecondary,
+                  ),
                   Visibility(
                       child: helpButton(Icons.help_outline, () {}),
                       visible: _isHelpVisible),
-                  stepButton(Icons.arrow_forward, _updatePage(_nextPage())),
+                  stepButton(
+                    _currentPage >= itemsCount - 1
+                        ? Icons.remove
+                        : Icons.arrow_forward,
+                    _updatePage(_nextPage()),
+                  ),
                 ],
               ),
             ),
@@ -106,5 +120,32 @@ class _RecipeStepsState extends State<RecipeSteps> {
         ),
       ],
     );
+  }
+
+  void Function() ingredientsDialog(BuildContext context) {
+    return () {
+      var ingredients =
+          context.read<RecipeProvider>().selectedRecipe.ingredients;
+      showDialog(
+        context: context,
+        child: SimpleDialog(
+          title: Text("Un oubli ?"),
+          children: [
+            for (var i in ingredients)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('- $i', style: TextStyle(height: 1.0)),
+              ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                "C'est bon ?",
+                style: TextStyle(color: kColorPrimary),
+              ),
+            ),
+          ],
+        ),
+      );
+    };
   }
 }

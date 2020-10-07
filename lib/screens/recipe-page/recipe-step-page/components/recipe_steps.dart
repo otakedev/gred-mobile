@@ -51,23 +51,17 @@ class _RecipeStepsState extends State<RecipeSteps> {
 
   Widget stepButton(IconData icon, void Function() onPressed,
           {style = ButtonTextTheme.primary, color: kColorPrimary}) =>
-      RaisedButton(
-        color: color,
-        textTheme: style,
-        onPressed: onPressed,
-        child: Icon(icon, size: 40),
-      );
-
-  Widget helpButton(IconData icon, void Function() onPressed,
-          {style = ButtonTextTheme.primary}) =>
-      RaisedButton(
-        color: kColorSecondary,
-        textTheme: style,
-        onPressed: () {
-          showDialog(
-              context: context, builder: (_) => HelpDialog(_currentPage));
-        },
-        child: Icon(icon, size: 40),
+      ButtonTheme(
+        minWidth: 50.0,
+        height: 50.0,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        child: RaisedButton(
+          color: color,
+          textTheme: style,
+          onPressed: onPressed,
+          child: Icon(icon, size: 40),
+        ),
       );
 
   @override
@@ -104,9 +98,12 @@ class _RecipeStepsState extends State<RecipeSteps> {
                     ingredientsDialog(context),
                     color: kColorSecondary,
                   ),
-                  Visibility(
-                      child: helpButton(Icons.help_outline, () {}),
-                      visible: _isHelpVisible),
+                  if (_isHelpVisible)
+                    stepButton(
+                      Icons.help_outline,
+                      helpDialog(context),
+                      color: kColorSecondary,
+                    ),
                   stepButton(
                     _currentPage >= itemsCount - 1
                         ? Icons.remove
@@ -120,6 +117,11 @@ class _RecipeStepsState extends State<RecipeSteps> {
         ),
       ],
     );
+  }
+
+  void Function() helpDialog(BuildContext context) {
+    return () =>
+        showDialog(context: context, builder: (_) => HelpDialog(_currentPage));
   }
 
   void Function() ingredientsDialog(BuildContext context) {

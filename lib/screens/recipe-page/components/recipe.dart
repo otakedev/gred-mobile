@@ -67,11 +67,11 @@ class Recipe extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: RecipeList(elems: recipe.ingredients, title: "Ingredients"),
+            child: RecipeList(tiles: recipe.ingredients, title: "Ingredients"),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: RecipeList(elems: recipe.utensils, title: "Ustensiles"),
+            child: RecipeList(tiles: recipe.utensils, title: "Ustensiles"),
           ),
           SizedBox(height: 100),
 

@@ -122,7 +122,9 @@ class _RecipeStepsState extends State<RecipeSteps> {
                             return stepButton(
                               Icons.help_outline,
                               helpDialog(context),
-                              iconColor: kColorSecondary,
+                              iconColor: snapshot.data == "NOVICE"
+                                  ? kColorSecondary
+                                  : kColorWhite,
                               color: snapshot.data == "NOVICE"
                                   ? kColorAccent
                                   : kColorSecondary,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/core/storage.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_model.dart';
 import 'package:gred_mobile/screens/recipe-page/components/cook_level.dart';
+import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
 import 'package:gred_mobile/theme/colors.dart';
 
 class Recipe extends StatelessWidget {
@@ -65,40 +67,29 @@ class Recipe extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: kColorWhite,
-                  borderRadius: BorderRadius.circular(40.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Ingredients", style: headline6(context)),
-                    for (var i in recipe.ingredients)
-                      Text('- $i', style: TextStyle(height: 1.5)),
-                  ],
-                )),
+            child: RecipeList(tiles: recipe.ingredients, title: "Ingredients"),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: kColorWhite,
-                borderRadius: BorderRadius.circular(40.0),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Ustensiles", style: headline6(context)),
-                  for (var i in recipe.utensils)
-                    Text('- $i', style: TextStyle(height: 1.5)),
-                ],
-              ),
-            ),
+            child: RecipeList(tiles: recipe.utensils, title: "Ustensiles"),
           ),
-          SizedBox(height: 100)
+          SizedBox(height: 20),
+
+          // TODO Remove , this is for testing
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () => writeStorage("user_skill", "NOVICE"),
+                  child: Text("Novice"),
+                  color: Colors.yellow,
+                ),
+                RaisedButton(
+                  onPressed: () => writeStorage("user_skill", "EXPERT"),
+                  child: Text("Expert"),
+                  color: Colors.yellow,
+                )
+              ])
         ],
       ),
     );

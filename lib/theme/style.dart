@@ -14,6 +14,13 @@ ThemeData appTheme() {
     // Define the default font family.
     fontFamily: 'ArialRounded',
 
+    buttonTheme: ButtonThemeData(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      textTheme: ButtonTextTheme.primary,
+    ),
+
     // Define the default TextTheme. Use this to specify the default
     // text styling for headlines, titles, bodies of text, and more.
     textTheme: TextTheme(

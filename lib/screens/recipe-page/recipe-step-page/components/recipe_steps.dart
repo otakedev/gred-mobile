@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/core/preference_access.dart';
+import 'package:gred_mobile/core/storage.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
@@ -99,11 +101,21 @@ class _RecipeStepsState extends State<RecipeSteps> {
                     color: kColorSecondary,
                   ),
                   if (_isHelpVisible)
-                    stepButton(
-                      Icons.help_outline,
-                      helpDialog(context),
-                      color: kColorSecondary,
-                    ),
+                    FutureBuilder(
+                        future: checkUserSkill(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.hasData) {
+                            return stepButton(
+                              Icons.help_outline,
+                              helpDialog(context),
+                              color: snapshot.data == "NOVICE"
+                                  ? kColorAccent
+                                  : kColorSecondary,
+                            );
+                          } else
+                            return SizedBox.shrink();
+                        }),
                   stepButton(
                     _currentPage >= itemsCount - 1
                         ? Icons.remove

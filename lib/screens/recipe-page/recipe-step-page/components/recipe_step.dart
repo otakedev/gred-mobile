@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/core/preference_access.dart';
+import 'package:gred_mobile/core/storage.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
+
+import 'help_dialog.dart';
 
 class RecipeStep extends StatelessWidget {
   const RecipeStep(this.index, {Key key}) : super(key: key);
@@ -15,6 +19,8 @@ class RecipeStep extends StatelessWidget {
     var item = context.select<RecipeStepProvider, RecipeStepModel>(
       (provider) => provider.findByIndex(index),
     );
+
+    bool isHelpAvailable = item.help != null;
 
     return Stack(
       children: [
@@ -53,6 +59,56 @@ class RecipeStep extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: Text('${item.description}'),
                       ),
+                      Spacer(),
+                      if (isHelpAvailable)
+                        FutureBuilder(
+                            future: checkUserSkill(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              if (snapshot.hasData) {
+                                return snapshot.data == "NOVICE"
+                                    ? Container(
+                                        padding: const EdgeInsets.all(16.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(30.0),
+                                              bottomRight:
+                                                  Radius.circular(30.0)),
+                                          color: kColorAccent,
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () => {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    HelpDialog(index)),
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                // Icons.play_circle_outline,
+                                                Icons.info_outline,
+                                                size: 40,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  '${item.help.videoTitle}',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox.shrink();
+                              } else
+                                return SizedBox.shrink();
+                            }),
                     ],
                   ),
                 ),

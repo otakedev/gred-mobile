@@ -73,7 +73,7 @@ class Recipe extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: RecipeList(tiles: recipe.utensils, title: "Ustensiles"),
           ),
-          SizedBox(height: 100),
+          SizedBox(height: 20),
 
           // TODO Remove , this is for testing
           Column(

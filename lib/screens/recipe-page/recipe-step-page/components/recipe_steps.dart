@@ -3,6 +3,7 @@ import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_step.dart';
 import 'package:gred_mobile/theme/colors.dart';
@@ -50,10 +51,14 @@ class _RecipeStepsState extends State<RecipeSteps> {
     super.dispose();
   }
 
-  Widget stepButton(IconData icon, void Function() onPressed,
-          {style = ButtonTextTheme.primary,
-          color: kColorPrimary,
-          visible = true}) =>
+  Widget stepButton(
+    IconData icon,
+    void Function() onPressed, {
+    style = ButtonTextTheme.primary,
+    color = kColorPrimary,
+    iconColor = kColorWhite,
+    visible = true,
+  }) =>
       Visibility(
         maintainState: true,
         maintainAnimation: true,
@@ -68,7 +73,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
             color: color,
             textTheme: style,
             onPressed: onPressed,
-            child: Icon(icon, size: 40),
+            child: Icon(icon, size: 40, color: iconColor),
           ),
         ),
       );
@@ -117,6 +122,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
                             return stepButton(
                               Icons.help_outline,
                               helpDialog(context),
+                              iconColor: kColorSecondary,
                               color: snapshot.data == "NOVICE"
                                   ? kColorAccent
                                   : kColorSecondary,
@@ -152,11 +158,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
         child: SimpleDialog(
           title: Text("Un oubli ?"),
           children: [
-            for (var i in ingredients)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('- $i', style: TextStyle(height: 1.0)),
-              ),
+            GredListTile(tiles: ingredients),
             SimpleDialogOption(
               onPressed: () => Navigator.pop(context),
               child: const Text(

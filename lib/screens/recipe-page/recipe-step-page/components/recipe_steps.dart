@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/core/preference_access.dart';
-import 'package:gred_mobile/core/storage.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
@@ -52,17 +51,25 @@ class _RecipeStepsState extends State<RecipeSteps> {
   }
 
   Widget stepButton(IconData icon, void Function() onPressed,
-          {style = ButtonTextTheme.primary, color: kColorPrimary}) =>
-      ButtonTheme(
-        minWidth: 50.0,
-        height: 50.0,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        child: RaisedButton(
-          color: color,
-          textTheme: style,
-          onPressed: onPressed,
-          child: Icon(icon, size: 40),
+          {style = ButtonTextTheme.primary,
+          color: kColorPrimary,
+          visible = true}) =>
+      Visibility(
+        maintainState: true,
+        maintainAnimation: true,
+        maintainSize: true,
+        visible: visible,
+        child: ButtonTheme(
+          minWidth: 50.0,
+          height: 50.0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+          child: RaisedButton(
+            color: color,
+            textTheme: style,
+            onPressed: onPressed,
+            child: Icon(icon, size: 40),
+          ),
         ),
       );
 
@@ -92,8 +99,9 @@ class _RecipeStepsState extends State<RecipeSteps> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   stepButton(
-                    _currentPage < 1 ? Icons.remove : Icons.arrow_back,
+                    Icons.arrow_back,
                     _updatePage(_previousPage()),
+                    visible: _currentPage > 0,
                   ),
                   stepButton(
                     Icons.menu_book_rounded,
@@ -117,10 +125,9 @@ class _RecipeStepsState extends State<RecipeSteps> {
                             return SizedBox.shrink();
                         }),
                   stepButton(
-                    _currentPage >= itemsCount - 1
-                        ? Icons.remove
-                        : Icons.arrow_forward,
+                    Icons.arrow_forward,
                     _updatePage(_nextPage()),
+                    visible: _currentPage < itemsCount - 1,
                   ),
                 ],
               ),

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class HelpDialog extends StatelessWidget {
   HelpDialog(this._currentStep, {Key key}) : super(key: key);
-  int _currentStep;
+  final int _currentStep;
 
   @override
   Widget build(BuildContext context) {

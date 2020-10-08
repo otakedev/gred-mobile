@@ -19,11 +19,17 @@ class HelpDialog extends StatelessWidget {
         ? AlertDialog(
             title: Text(recipeHelp.title),
             content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 VideoHolder(
-                    source: recipeHelp.videoSource,
-                    looping: false,
-                    showControls: true),
+                  source: recipeHelp.videoSource,
+                  looping: false,
+                  showControls: true,
+                  styleIsMaterial: false,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Text(recipeHelp.content),
               ],
             ),

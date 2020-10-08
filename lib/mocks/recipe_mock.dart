@@ -53,7 +53,9 @@ const RECIPES_MOCK = [
           "content":
               "Il est nécessaire d’ajouter le lait très progressivement dans la pâte afin que la farine ait le temps de l’assimiler. Il est conseillé de verser en 4 ou 5 fois sans jamais s'arrêter de fouetter.",
           "videoSource":
-              "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
+              // "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
+              "https://github.com/Betsara-MARCELLIN/video_test/raw/main/no-grumeaux.mp4",
+          // "assets/videos/no-grumeaux.mp4",
           "videoTitle": "Comment éviter les grumeaux"
         }
       },

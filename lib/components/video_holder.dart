@@ -1,17 +1,20 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/theme/colors.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoHolder extends StatefulWidget {
   final String source;
   final bool looping;
   final bool showControls;
+  final bool styleIsMaterial;
 
   VideoHolder(
       {@required this.source,
       @required this.looping,
       @required this.showControls,
+      @required this.styleIsMaterial,
       Key key})
       : super(key: key);
 
@@ -26,7 +29,9 @@ class _VideoHolderState extends State<VideoHolder> {
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.network(widget.source);
+    _videoPlayerController = Uri.parse(widget.source).isAbsolute
+        ? VideoPlayerController.network(widget.source)
+        : VideoPlayerController.asset(widget.source);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       aspectRatio: 16 / 9,
@@ -35,26 +40,27 @@ class _VideoHolderState extends State<VideoHolder> {
       // Try playing around with some of these other options:
 
       showControls: widget.showControls,
-      // materialProgressColors: ChewieProgressColors(
-      //   playedColor: Colors.red,
-      //   handleColor: Colors.blue,
-      //   backgroundColor: Colors.grey,
-      //   bufferedColor: Colors.lightGreen,
-      // ),
-      // placeholder: Container(
-      //   color: Colors.grey,
-      // ),
+
       autoInitialize: true,
       errorBuilder: (context, errorMessage) {
         return Center(
-            child: Text(errorMessage, style: TextStyle(color: Colors.red)));
+            child: Text(
+          "réessayez plus tard, il y a eu un problème de connexion :(",
+          style: TextStyle(color: kColorPrimary),
+          textAlign: TextAlign.center,
+        ));
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Chewie(controller: _chewieController);
+    return Theme(
+        data: ThemeData.light().copyWith(
+            platform: widget.styleIsMaterial
+                ? TargetPlatform.android
+                : TargetPlatform.iOS),
+        child: Chewie(controller: _chewieController));
   }
 
   @override

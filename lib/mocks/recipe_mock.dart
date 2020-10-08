@@ -7,16 +7,41 @@ const RECIPES_MOCK = [
     "description":
         "Les fluffy pancakes, une recette qui nous vient du pays du soleil levant, le Japon. Des pancakes légers, soufflés et moelleux comme on en voit peu !",
     "ingredients": [
-      "4 oeufs",
-      "70g de farine",
-      "50g de sucre",
-      "1 cuillère à café de poudre à lever",
-      "1 cuillère à café d'extrait de vanille liquide",
-      "4 cuillères à soupe de lait",
+      {
+        "leading": "assets/images/leading/oeuf.png",
+        "title": "Oeufs",
+        "subtitle": "4"
+      },
+      {
+        "leading": "assets/images/leading/farine.png",
+        "title": "Farine",
+        "subtitle": "70g"
+      },
+      {
+        "leading": "assets/images/leading/poudre_lever.png",
+        "title": "Poudre à lever",
+        "subtitle": "1 cuillère à café"
+      },
+      {
+        "leading": "assets/images/leading/extrait_vanille.png",
+        "title": "Extrait de vanille liquide",
+        "subtitle": "1 cuillère à café"
+      },
+      {
+        "leading": "assets/images/leading/lait.png",
+        "title": "Lait",
+        "subtitle": "4 cuillères à soupe"
+      },
     ],
     "utensils": [
-      "1 Poêle anti-adhésive",
-      "1 Fouet ou batteur électrique",
+      {
+        "leading": "assets/images/leading/poele_non_adhesive.png",
+        "title": "Poêle anti-adhésive",
+      },
+      {
+        "leading": "assets/images/leading/fouet.png",
+        "title": "Fouet ou batteur électrique",
+      },
     ],
     "steps": [
       {

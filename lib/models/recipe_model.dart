@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
+import 'package:gred_mobile/models/tiles_model.dart';
 
 class RecipeModel {
   final String imageUrl;
@@ -7,8 +8,8 @@ class RecipeModel {
   final int difficulty;
   final String title;
   final String description;
-  final List<String> ingredients;
-  final List<String> utensils;
+  final List<TileModel> ingredients;
+  final List<TileModel> utensils;
   final List<RecipeStepModel> steps;
 
   RecipeModel({
@@ -34,11 +35,21 @@ class RecipeModel {
         difficulty = json['difficulty'],
         title = json['title'],
         description = json['description'],
-        ingredients = json['ingredients'],
-        steps = json['steps']
-            .map<RecipeStepModel>((model) => RecipeStepModel.fromMap(model))
+        ingredients = json['ingredients']
+            .map<TileModel>(
+              (i) => TileModel.fromMap(i),
+            )
             .toList(),
-        utensils = json['utensils'];
+        steps = json['steps']
+            .map<RecipeStepModel>(
+              (model) => RecipeStepModel.fromMap(model),
+            )
+            .toList(),
+        utensils = json['utensils']
+            .map<TileModel>(
+              (i) => TileModel.fromMap(i),
+            )
+            .toList();
 
   Map<String, dynamic> toMap() => {
         "imageUrl": imageUrl,

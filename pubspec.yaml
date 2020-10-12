@@ -51,7 +51,6 @@ flutter:
   assets:
     - assets/images/
     - assets/images/leading/
-    - assets/videos/
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

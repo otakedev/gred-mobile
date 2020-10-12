@@ -93,7 +93,15 @@ class _RecipeStepsState extends State<RecipeSteps> {
           controller: _controller,
           onPageChanged: _onPageViewChange,
           itemCount: itemsCount,
-          itemBuilder: (context, position) => RecipeStep(position),
+          itemBuilder: (context, position) => Stack(
+            children: [
+              LinearProgressIndicator(
+                value: (position + 1) / itemsCount,
+                minHeight: 8,
+              ),
+              RecipeStep(position),
+            ],
+          ),
         ),
         Positioned(
           child: Align(

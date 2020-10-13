@@ -18,10 +18,11 @@ class StepTrakingDialog extends StatelessWidget {
 
     var size = items.length - 1;
 
-    return Container(child: OrientationBuilder(
+    return Container(
+      child: OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
-      return Container(
-          child: AlertDialog(
+          return Container(
+            child: AlertDialog(
               title: Orientation.portrait == orientation
                   ? Column(children: [
                       StepTracker(currentStep: _currentStep, size: size),
@@ -33,46 +34,52 @@ class StepTrakingDialog extends StatelessWidget {
                       TimeTracker(items: items, currentStep: _currentStep)
                     ]),
               content: Container(
-                  width: double.maxFinite,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: items.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index >= _currentStep) {
-                          return Column(children: [
-                            Row(children: [
-                              Padding(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index >= _currentStep) {
+                      return Column(children: [
+                        Row(children: [
+                          Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CircleAvatar(
+                                child: Text(index.toString(),
+                                    style: TextStyle(color: kColorWhite)),
+                                backgroundColor: index == _currentStep
+                                    ? kColorPrimary
+                                    : kColorSecondary,
+                              )),
+                          Expanded(
+                              child: Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: CircleAvatar(
-                                    child: Text(index.toString(),
-                                        style: TextStyle(color: kColorWhite)),
-                                    backgroundColor: index == _currentStep
-                                        ? kColorPrimary
-                                        : kColorSecondary,
-                                  )),
-                              Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(items[index].title,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: index == _currentStep
-                                                  ? kColorPrimary
-                                                  : kColorSecondary))))
-                            ]),
-                            RecipeList(
-                                tiles: items[index].ingredients,
-                                direction: orientation == Orientation.portrait
-                                    ? Axis.vertical
-                                    : Axis.horizontal)
-                          ]);
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      }))));
-    }));
+                                  child: Text(items[index].title,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: index == _currentStep
+                                              ? kColorPrimary
+                                              : kColorSecondary))))
+                        ]),
+                        RecipeList(
+                            tiles: items[index].ingredients,
+                            direction: orientation == Orientation.portrait
+                                ? Axis.vertical
+                                : Axis.horizontal)
+                      ]);
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  },
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -87,19 +94,19 @@ class TimeTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
-        text: TextSpan(
-            style: TextStyle(
-                color: kColorSecondary,
-                fontSize: 20,
-                fontWeight: FontWeight.bold),
-            children: <TextSpan>[
+      text: TextSpan(
+        style: TextStyle(
+            color: kColorSecondary, fontSize: 20, fontWeight: FontWeight.bold),
+        children: <TextSpan>[
           TextSpan(
-              text:
-                  items[_currentStep].overallRemainingTimeFromHere.toString() +
-                      ' min',
-              style: TextStyle(color: kColorAccent)),
+            text: items[_currentStep].overallRemainingTimeFromHere.toString() +
+                ' min',
+            style: TextStyle(color: kColorAccent),
+          ),
           TextSpan(text: " restant estimée")
-        ]));
+        ],
+      ),
+    );
   }
 }
 
@@ -114,16 +121,16 @@ class StepTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
-        text: TextSpan(
-            style: TextStyle(
-                color: kColorSecondary,
-                fontSize: 24,
-                fontWeight: FontWeight.bold),
-            children: <TextSpan>[
+      text: TextSpan(
+        style: TextStyle(
+            color: kColorSecondary, fontSize: 24, fontWeight: FontWeight.bold),
+        children: <TextSpan>[
           TextSpan(text: 'Étapes '),
           TextSpan(
               text: _currentStep.toString() + '/' + size.toString(),
               style: TextStyle(color: kColorPrimary))
-        ]));
+        ],
+      ),
+    );
   }
 }

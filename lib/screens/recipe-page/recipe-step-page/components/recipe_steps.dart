@@ -18,6 +18,7 @@ class RecipeSteps extends StatefulWidget {
 
 class _RecipeStepsState extends State<RecipeSteps> {
   int _currentPage = 0;
+  int _itemsCount = 0;
   bool _isHelpVisible = true;
   List<RecipeStepModel> recipes;
 
@@ -84,6 +85,8 @@ class _RecipeStepsState extends State<RecipeSteps> {
       (provider) => provider.stepsCount,
     );
 
+    _itemsCount = itemsCount;
+
     recipes = context.select<RecipeStepProvider, List<RecipeStepModel>>(
         (provider) => provider.steps);
 
@@ -96,7 +99,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
           itemBuilder: (context, position) => Stack(
             children: [
               LinearProgressIndicator(
-                value: (position + 1) / itemsCount,
+                value: (_currentPage + 1) / _itemsCount,
                 minHeight: 8,
               ),
               RecipeStep(position),
@@ -162,7 +165,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
   void Function() ingredientsDialog(BuildContext context) {
     return () {
       var ingredients =
-          context.read<RecipeProvider>().selectedRecipe.ingredients;
+          context.read<RecipeProvider>().selectedRecipeIngredients;
       showDialog(
         context: context,
         child: SimpleDialog(

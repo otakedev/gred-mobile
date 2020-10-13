@@ -8,7 +8,6 @@ class RecipeModel {
   final int difficulty;
   final String title;
   final String description;
-  final List<TileModel> ingredients;
   final List<TileModel> utensils;
   final List<RecipeStepModel> steps;
 
@@ -18,7 +17,6 @@ class RecipeModel {
     @required this.difficulty,
     @required this.title,
     @required this.description,
-    @required this.ingredients,
     @required this.steps,
     this.utensils,
   })  : assert(imageUrl != null),
@@ -26,8 +24,10 @@ class RecipeModel {
         assert(difficulty != null),
         assert(title != null),
         assert(description != null),
-        assert(steps != null),
-        assert(ingredients != null);
+        assert(steps != null);
+
+  List<TileModel> get ingredients =>
+      steps.map((e) => e.ingredients).toList().expand((x) => x).toList();
 
   RecipeModel.fromMap(Map<String, dynamic> json)
       : imageUrl = json['imageUrl'],
@@ -35,11 +35,6 @@ class RecipeModel {
         difficulty = json['difficulty'],
         title = json['title'],
         description = json['description'],
-        ingredients = json['ingredients']
-            .map<TileModel>(
-              (i) => TileModel.fromMap(i),
-            )
-            .toList(),
         steps = json['steps']
             .map<RecipeStepModel>(
               (model) => RecipeStepModel.fromMap(model),
@@ -57,7 +52,6 @@ class RecipeModel {
         "difficulty": difficulty,
         "title": title,
         "description": description,
-        "ingredients": ingredients,
         "steps": List<RecipeStepModel>.from(steps.map((s) => s.toMap())),
         "utensils": utensils,
       };

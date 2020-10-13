@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/components/draw/DownTriangleClipper.dart';
 import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -135,21 +138,22 @@ class GredDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
       width: double.infinity,
       decoration: BoxDecoration(
         color: kColorWhite,
         borderRadius: BorderRadius.circular(30.0),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("${item.title ?? ''}", style: headline6(context)),
-          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text('${item.description}', style: bodyText1(context)),
+          ),
+          RecipeList(
+            tiles: item.ingredients,
+            displayImage: false,
+            direction: Axis.horizontal,
           ),
           Spacer(),
           if (isAccent)
@@ -215,15 +219,53 @@ class GredImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
-        image: DecorationImage(
-          image: AssetImage(item.imageUrl),
-          fit: BoxFit.cover,
-        ),
+    return ClipRRect(
+      borderRadius: new BorderRadius.circular(30.0),
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(item.imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+            child: ShaderMask(
+              shaderCallback: (rect) {
+                return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black, Colors.black.withOpacity(0.0)],
+                    stops: [0.4, 0.90]).createShader(rect);
+              },
+              blendMode: BlendMode.dstOut,
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(item.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (item.title != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 60),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "${item.title ?? ''}",
+                  style: TextStyle(fontSize: 30, color: kColorWhite),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

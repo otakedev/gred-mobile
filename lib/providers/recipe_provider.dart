@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/mocks/recipe_mock.dart';
 import 'package:gred_mobile/models/recipe_model.dart';
+import 'package:gred_mobile/models/tiles_model.dart';
 
 class RecipeProvider extends ChangeNotifier {
   final List<RecipeModel> _recipes =
@@ -12,6 +13,13 @@ class RecipeProvider extends ChangeNotifier {
   List<RecipeModel> get recipes => _recipes;
 
   RecipeModel get selectedRecipe => _recipes[0];
+
+  List<TileModel> get selectedRecipeIngredients => _recipes[0]
+      .steps
+      .map((e) => e.ingredients)
+      .toList()
+      .expand((x) => x)
+      .toList();
 
   // set selectedRecipe(RecipeModel recipe) {
   //   _recipe = selectedRecipe;

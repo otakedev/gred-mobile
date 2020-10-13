@@ -44,7 +44,7 @@ ThemeData appTheme() {
       ),
       bodyText2: TextStyle(
         fontSize: 14.0,
-        color: kColorSecondary,
+        color: kColorSecondaryText,
       ),
     ),
   );

@@ -122,7 +122,6 @@ class _RecipeStepsState extends State<RecipeSteps> {
                   ),
                   stepButton(
                     Icons.menu_book_rounded,
-                    // ingredientsDialog(context),
                     trackStepDialog(context),
                     color: kColorSecondary,
                   ),
@@ -167,28 +166,5 @@ class _RecipeStepsState extends State<RecipeSteps> {
   void Function() trackStepDialog(BuildContext context) {
     return () => showDialog(
         context: context, builder: (_) => StepTrakingDialog(_currentPage));
-  }
-
-  void Function() ingredientsDialog(BuildContext context) {
-    return () {
-      var ingredients =
-          context.read<RecipeProvider>().selectedRecipeIngredients;
-      showDialog(
-        context: context,
-        child: SimpleDialog(
-          title: Text("Un oubli ?"),
-          children: [
-            GredListTile(tiles: ingredients),
-            SimpleDialogOption(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                "C'est bon ?",
-                style: TextStyle(color: kColorPrimary),
-              ),
-            ),
-          ],
-        ),
-      );
-    };
   }
 }

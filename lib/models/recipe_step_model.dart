@@ -8,10 +8,14 @@ class RecipeStepModel {
   final String description;
   final List<TileModel> ingredients;
   final RecipeHelpModel help;
+  final int timeEstimated;
+  final int overallRemainingTimeFromHere;
 
   RecipeStepModel({
     this.help,
     this.ingredients,
+    @required this.timeEstimated,
+    @required this.overallRemainingTimeFromHere,
     @required this.imageUrl,
     @required this.title,
     @required this.description,
@@ -30,7 +34,9 @@ class RecipeStepModel {
             .toList(),
         help = json.containsKey('help')
             ? RecipeHelpModel.fromMap(json['help'])
-            : null;
+            : null,
+        timeEstimated = json['timeEstimdated'],
+        overallRemainingTimeFromHere = json['overallRemainingTimeFromHere'];
 
   Map<String, dynamic> toMap() => {
         "imageUrl": imageUrl,
@@ -39,5 +45,7 @@ class RecipeStepModel {
         "help": help,
         "ingredients":
             List<RecipeStepModel>.from(ingredients.map((s) => s.toMap())),
+        "timeEstimated": timeEstimated,
+        "overallRemainingTimeFromHere": overallRemainingTimeFromHere
       };
 }

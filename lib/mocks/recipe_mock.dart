@@ -31,6 +31,8 @@ const RECIPES_MOCK = [
           // "assets/videos/no-grumeaux.mp4",
           "videoTitle": "Comment éviter les grumeaux",
         },
+        "timeEstimated": 3,
+        "overallRemainingTimeFromHere": 48,
         "ingredients": [
           {
             "leading": "assets/images/leading/oeuf.png",
@@ -54,6 +56,8 @@ const RECIPES_MOCK = [
         "title": "Mélanger tout",
         "description":
             "Ajouter l’essence de vanille. Bien fouetter jusqu’à obtention d’un mélange blanchi et mousseux.",
+        "timeEstimated": 10,
+        "overallRemainingTimeFromHere": 45,
         "ingredients": [
           {
             "leading": "assets/images/leading/extrait_vanille.png",
@@ -72,6 +76,8 @@ const RECIPES_MOCK = [
         "title": "Blanc en neige",
         "description":
             "Monter les blancs en neige en ajoutant le sucre progressivement.",
+        "timeEstimated": 15,
+        "overallRemainingTimeFromHere": 35,
         "ingredients": [
           {
             "leading": "assets/images/leading/sucre.png",
@@ -83,6 +89,8 @@ const RECIPES_MOCK = [
       {
         "imageUrl": "assets/images/pancake-step-4.png",
         "title": "Mélanger soigneusement",
+        "timeEstimated": 5,
+        "overallRemainingTimeFromHere": 10,
         "description":
             "Une fois les blancs en neige montés, il faut les verser soigneusement dans la pâte et mélanger doucement.",
         "ingredients": [],
@@ -90,6 +98,8 @@ const RECIPES_MOCK = [
       {
         "imageUrl": "assets/images/pancake-step-5.png",
         "title": "La cuisson",
+        "timeEstimated": 5,
+        "overallRemainingTimeFromHere": 5,
         "description":
             "Verser, à l’aide d’une poche à pâtisserie, la pâte dans la poêle de manière à obtenir des petits cylindres. Couvrir la poêle, laisser cuire 3 à 4 minutes en fonction du feu. Les pancakes doivent dorer.",
         "ingredients": [],

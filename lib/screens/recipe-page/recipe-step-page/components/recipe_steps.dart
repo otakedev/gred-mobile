@@ -6,6 +6,7 @@ import 'package:gred_mobile/providers/recipe_step_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_step.dart';
+import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/step_tracking_dialog.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -121,7 +122,8 @@ class _RecipeStepsState extends State<RecipeSteps> {
                   ),
                   stepButton(
                     Icons.menu_book_rounded,
-                    ingredientsDialog(context),
+                    // ingredientsDialog(context),
+                    trackStepDialog(context),
                     color: kColorSecondary,
                   ),
                   if (_isHelpVisible)
@@ -160,6 +162,11 @@ class _RecipeStepsState extends State<RecipeSteps> {
   void Function() helpDialog(BuildContext context) {
     return () =>
         showDialog(context: context, builder: (_) => HelpDialog(_currentPage));
+  }
+
+  void Function() trackStepDialog(BuildContext context) {
+    return () => showDialog(
+        context: context, builder: (_) => StepTrakingDialog(_currentPage));
   }
 
   void Function() ingredientsDialog(BuildContext context) {

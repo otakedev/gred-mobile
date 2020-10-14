@@ -22,7 +22,8 @@ class RecipePage extends StatelessWidget {
       ),
       body: Recipe(recipe),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text('Start Cooking !', style: TextStyle(color: kColorWhite)),
+        label: Text('Commencer à cuisiner !',
+            style: TextStyle(color: kColorWhite)),
         backgroundColor: kColorPrimary,
         icon: FaIcon(FontAwesomeIcons.cookie, color: kColorWhite),
         onPressed: () {

@@ -19,18 +19,31 @@ class _RecipeListPageState extends State<RecipeListPage> {
     recipeList = context.select<RecipeProvider, List<RecipeModel>>(
         (provider) => provider.recipes);
     return Scaffold(
-      appBar: AppBar(title: Text('hello')),
+      appBar: AppBar(
+        title: Center(
+          child: Text('Recettes'),
+        ),
+      ),
       body: ListView.builder(
-          shrinkWrap: true,
-          itemCount: recipeList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return RecipeCard(
+        shrinkWrap: true,
+        itemCount: recipeList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () => selectAndOpen(context, index),
+            child: RecipeCard(
                 avatarUrl: recipeList[index].avatarUrl,
                 author: recipeList[index].author,
                 difficulty: recipeList[index].difficulty,
                 imageUrl: recipeList[index].imageUrl,
-                title: recipeList[index].title);
-          }),
+                title: recipeList[index].title),
+          );
+        },
+      ),
     );
+  }
+
+  void selectAndOpen(BuildContext context, int index) {
+    Provider.of<RecipeProvider>(context, listen: false).selectRecipe(index);
+    Navigator.pushNamed(context, '/recipe');
   }
 }

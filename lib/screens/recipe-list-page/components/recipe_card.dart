@@ -31,38 +31,38 @@ class RecipeCard extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 25),
-                child: Stack(
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(40),
-                            child: Image(
-                                height: 220,
-                                width: double.infinity,
-                                image: AssetImage(imageUrl),
-                                fit: BoxFit.cover))),
-                    Positioned(
-                        bottom: -25,
-                        left: 40,
-                        child: CircleAvatar(
-                            backgroundImage: AssetImage(avatarUrl),
-                            radius: 40)),
-                    Positioned(
-                      bottom: -15,
-                      left: 135,
-                      child: Text(
-                        author,
-                        style: TextStyle(color: kColorPrimary),
-                      ),
-                    )
-                  ],
-                  overflow: Overflow.visible,
-                ),
+                child: Stack(children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(40),
+                      child: Image(
+                          height: 220,
+                          width: double.infinity,
+                          image: AssetImage(imageUrl),
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                  Positioned(
+                      bottom: -25,
+                      left: 40,
+                      child: CircleAvatar(
+                          backgroundImage: AssetImage(avatarUrl), radius: 40)),
+                  Positioned(
+                    bottom: -15,
+                    left: 135,
+                    child: Text(
+                      author,
+                      style: TextStyle(color: kColorPrimary),
+                    ),
+                  ),
+                ], overflow: Overflow.visible),
               ),
               Center(
-                child:
-                    SizedBox(width: 100, child: CookLevel(level: difficulty)),
+                child: SizedBox(
+                  width: 100,
+                  child: CookLevel(level: difficulty),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
@@ -70,7 +70,7 @@ class RecipeCard extends StatelessWidget {
                   title,
                   style: headline6(context),
                 ),
-              ),
+              )
             ],
           ),
         ),

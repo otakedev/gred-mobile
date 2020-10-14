@@ -17,22 +17,50 @@ class HelpDialog extends StatelessWidget {
     );
 
     return recipeHelp != null
-        ? AlertDialog(
-            scrollable: true,
-            title: Text(recipeHelp.title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                VideoHolder(
-                  source: recipeHelp.videoSource,
-                  looping: false,
-                  showControls: true,
-                  styleIsMaterial: false,
-                ),
-                SizedBox(height: 10),
-                Text(recipeHelp.content, style: bodyText2(context)),
-              ],
-            ),
+        ? OrientationBuilder(
+            builder: (BuildContext context, Orientation orientation) {
+              return AlertDialog(
+                scrollable: true,
+                title: Text(recipeHelp.title),
+                content: orientation == Orientation.portrait
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          VideoHolder(
+                            source: recipeHelp.videoSource,
+                            looping: false,
+                            showControls: true,
+                            styleIsMaterial: false,
+                          ),
+                          SizedBox(height: 10),
+                          Text(recipeHelp.content, style: bodyText2(context)),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: VideoHolder(
+                              source: recipeHelp.videoSource,
+                              looping: false,
+                              showControls: true,
+                              styleIsMaterial: false,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 8, 8),
+                              child: Text(
+                                recipeHelp.content,
+                                style: bodyText1(context),
+                                textAlign: TextAlign.justify,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+              );
+            },
           )
         : SizedBox.shrink();
   }

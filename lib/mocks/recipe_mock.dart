@@ -2,6 +2,7 @@ const RECIPES_MOCK = [
   {
     "imageUrl": "assets/images/recette-pancake.png",
     "avatarUrl": "assets/images/avatar1.png",
+    "author" : "Fang_pen_chao_baguette",
     "difficulty": 1,
     "title": "Pancake Soufflé",
     "description":

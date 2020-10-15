@@ -17,7 +17,6 @@ class RecipeStepPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
           centerTitle: true,
           title: Text('${recipe?.title ?? "Recipe"}'),
           leading: Container(
@@ -33,21 +32,6 @@ class RecipeStepPage extends StatelessWidget {
               },
             ),
           )),
-=======
-        centerTitle: true,
-        title: Text('${recipe?.title ?? "Recipe"}'),
-        leading: Container(
-          decoration: BoxDecoration(
-            color: kColorSecondary,
-            borderRadius: BorderRadius.only(topRight: Radius.circular(30)),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.arrow_back, color: kColorWhite),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-      ),
->>>>>>> #34 update UI according to screen size and orientation
       body: RecipeSteps(),
     );
   }

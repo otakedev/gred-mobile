@@ -10,16 +10,26 @@ class RecipeList extends StatelessWidget {
       this.title,
       @required this.tiles,
       this.displayImage = true,
-      this.direction = Axis.vertical})
+      this.direction = Axis.vertical,
+      this.maxItems})
       : super(key: key);
 
   final String title;
   final Axis direction;
   final bool displayImage;
   final List<TileModel> tiles;
+  final int maxItems;
 
   @override
   Widget build(BuildContext context) {
+    List<TileModel> copy = new List();
+    copy.addAll(tiles);
+    if (tiles.isNotEmpty && maxItems != null) {
+      if (tiles.length > maxItems) {
+        copy.removeRange(maxItems, copy.length);
+      }
+    }
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -28,25 +38,31 @@ class RecipeList extends StatelessWidget {
       ),
       child: GredListTile(
           title: title,
-          tiles: tiles,
+          tiles: copy,
           displayImage: displayImage,
+          maxItems: maxItems,
+          trueLength: tiles.length,
           direction: direction),
     );
   }
 }
 
 class GredListTile extends StatelessWidget {
-  const GredListTile({
-    Key key,
-    this.title,
-    @required this.tiles,
-    this.direction,
-    this.displayImage,
-  }) : super(key: key);
+  const GredListTile(
+      {Key key,
+      this.title,
+      @required this.tiles,
+      this.direction,
+      this.displayImage,
+      this.maxItems,
+      this.trueLength})
+      : super(key: key);
 
   final String title;
   final Axis direction;
   final bool displayImage;
+  final int maxItems;
+  final int trueLength;
   final List<TileModel> tiles;
 
   @override
@@ -80,6 +96,18 @@ class GredListTile extends StatelessWidget {
           ),
         )
     ];
+
+    if (maxItems != null) {
+      if (maxItems < trueLength) {
+        ingredientsWidgets.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "...",
+            style: headline6(context),
+          ),
+        ));
+      }
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,

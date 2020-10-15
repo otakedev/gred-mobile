@@ -43,7 +43,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
   }
 
   void selectAndOpen(BuildContext context, int index) {
-    Provider.of<RecipeProvider>(context, listen: false).selectRecipe(index);
+    context.read<RecipeProvider>().selectRecipe(index);
     Navigator.pushNamed(context, '/recipe');
   }
 }

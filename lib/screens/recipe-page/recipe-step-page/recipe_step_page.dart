@@ -15,24 +15,24 @@ class RecipeStepPage extends StatelessWidget {
       (provider) => provider.selectedRecipe,
     );
 
-    return ChangeNotifierProvider(
-      create: (_) => SpeechProvider(),
-      child: Scaffold(
-        appBar: AppBar(
-            centerTitle: true,
-            title: Text('${recipe?.title ?? "Recipe"}'),
-            leading: Container(
-              decoration: BoxDecoration(
-                color: kColorSecondary,
-                borderRadius: BorderRadius.only(topRight: Radius.circular(30)),
-              ),
-              child: IconButton(
-                icon: Icon(Icons.arrow_back, color: kColorWhite),
-                onPressed: () => Navigator.pop(context),
-              ),
-            )),
-        body: RecipeSteps(),
-      ),
+    return Scaffold(
+      appBar: AppBar(
+          centerTitle: true,
+          title: Text('${recipe?.title ?? "Recipe"}'),
+          leading: Container(
+            decoration: BoxDecoration(
+              color: kColorSecondary,
+              borderRadius: BorderRadius.only(topRight: Radius.circular(30)),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: kColorWhite),
+              onPressed: () => {
+                context.read<SpeechProvider>().stopListening(),
+                Navigator.pop(context),
+              },
+            ),
+          )),
+      body: RecipeSteps(),
     );
   }
 }

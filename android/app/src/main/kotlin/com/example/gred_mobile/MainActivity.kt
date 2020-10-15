@@ -21,14 +21,10 @@ class MainActivity : FlutterActivity() {
       call, result ->
       if (call.method == "setStreamMusicMute") {
         val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        // am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE)
-        // am.setStreamVolume(AudioManager.STREAM_SYSTEM, 0, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE)
         am.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 0, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE)
         result.success(true)
       } else if (call.method == "setStreamMusicUnmute") {
         val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        // am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE)
-        // am.setStreamVolume(AudioManager.STREAM_SYSTEM, am.getStreamMaxVolume(AudioManager.STREAM_SYSTEM), AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE)
         am.setStreamVolume(AudioManager.STREAM_NOTIFICATION, am.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION), AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE)
         result.success(true)
       } else {

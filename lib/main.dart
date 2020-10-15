@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/screens/recipe-list-page/recipe_list_page.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/recipe_step_page.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe_page.dart';
 import 'package:gred_mobile/theme/style.dart';
@@ -30,8 +31,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Gred App',
       theme: appTheme(),
-      initialRoute: '/recipe',
+      initialRoute: '/recipes',
       routes: {
+        '/recipes': (context) => RecipeListPage(),
         '/recipe': (context) => RecipePage(),
         '/steps': (context) => RecipeStepPage(),
       },

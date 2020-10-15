@@ -8,21 +8,25 @@ class RecipeProvider extends ChangeNotifier {
       RECIPES_MOCK.map((model) => RecipeModel.fromMap(model)).toList();
 
   // not used for now
-  // RecipeModel _recipe;
+  RecipeModel _recipe;
 
   List<RecipeModel> get recipes => _recipes;
 
-  RecipeModel get selectedRecipe => _recipes[0];
+  RecipeModel get selectedRecipe => _recipe;
 
-  List<TileModel> get selectedRecipeIngredients => _recipes[0]
-      .steps
+  List<TileModel> get selectedRecipeIngredients => _recipe.steps
       .map((e) => e.ingredients)
       .toList()
       .expand((x) => x)
       .toList();
 
-  // set selectedRecipe(RecipeModel recipe) {
-  //   _recipe = selectedRecipe;
-  //   notifyListeners();
-  // }
+  set selectedRecipe(RecipeModel recipe) {
+    _recipe = selectedRecipe;
+    notifyListeners();
+  }
+
+  void selectRecipe(int index) {
+    _recipe = _recipes[index];
+    notifyListeners();
+  }
 }

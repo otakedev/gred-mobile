@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/components/microphone.dart';
 import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_step.dart';
@@ -19,16 +23,21 @@ class RecipeSteps extends StatefulWidget {
 
 class _RecipeStepsState extends State<RecipeSteps> {
   int _currentPage = 0;
-  int _itemsCount = 0;
   bool _isHelpVisible = true;
-  List<RecipeStepModel> recipes;
+  bool _isVocalInAction = false;
+  List<RecipeStepModel> _recipes;
 
   PageController _controller = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _onPageViewChange(int page) {
     setState(() {
       _currentPage = page;
-      _isHelpVisible = recipes[page].help != null;
+      _isHelpVisible = _recipes[page].help != null;
     });
   }
 
@@ -86,10 +95,24 @@ class _RecipeStepsState extends State<RecipeSteps> {
       (provider) => provider.stepsCount,
     );
 
-    _itemsCount = itemsCount;
+    _recipes = context.select<RecipeStepProvider, List<RecipeStepModel>>(
+      (provider) => provider.steps,
+    );
 
-    recipes = context.select<RecipeStepProvider, List<RecipeStepModel>>(
-        (provider) => provider.steps);
+    context.select<SpeechProvider, Command>((provider) {
+      // I call that DIY
+      if (_isVocalInAction == true) {
+        return provider.command;
+      }
+      _isVocalInAction = true;
+      Timer(Duration(seconds: 1), () => _isVocalInAction = false);
+      if (provider.command == Command.NEXT) {
+        _updatePage(_nextPage())();
+      } else if (provider.command == Command.PREVIOUS) {
+        _updatePage(_previousPage())();
+      }
+      return provider.command;
+    });
 
     return Stack(
       children: [
@@ -100,7 +123,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
           itemBuilder: (context, position) => Stack(
             children: [
               LinearProgressIndicator(
-                value: (_currentPage + 1) / _itemsCount,
+                value: (_currentPage + 1) / itemsCount,
                 minHeight: 8,
               ),
               RecipeStep(position),
@@ -154,6 +177,20 @@ class _RecipeStepsState extends State<RecipeSteps> {
             ),
           ),
         ),
+        Align(
+          alignment:
+              Alignment.lerp(Alignment.topLeft, Alignment.bottomLeft, 0.30),
+          child: Selector<SpeechProvider, bool>(
+            selector: (_, model) => model.isActive,
+            shouldRebuild: (prev, next) => next != prev,
+            builder: (context, value, _) => Microphone(
+              isListening: value,
+              onTap: () => {
+                context.read<SpeechProvider>().switchListeningMode(),
+              },
+            ),
+          ),
+        )
       ],
     );
   }

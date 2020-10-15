@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/models/recipe_model.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
+import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_steps.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,10 @@ class RecipeStepPage extends StatelessWidget {
             ),
             child: IconButton(
               icon: Icon(Icons.arrow_back, color: kColorWhite),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => {
+                context.read<SpeechProvider>().stopListening(),
+                Navigator.pop(context),
+              },
             ),
           )),
       body: RecipeSteps(),

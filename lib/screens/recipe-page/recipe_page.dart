@@ -27,7 +27,7 @@ class RecipePage extends StatelessWidget {
         backgroundColor: kColorPrimary,
         icon: FaIcon(FontAwesomeIcons.cookie, color: kColorWhite),
         onPressed: () {
-          Navigator.pushNamed(context, '/steps');
+          Navigator.pushNamed(context, '/vocal-dialog');
         },
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/components/draw/DownTriangleClipper.dart';
+import 'package:gred_mobile/components/expandable_text.dart';
 import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
@@ -146,6 +147,9 @@ class GredArrow extends StatelessWidget {
 }
 
 class GredDescription extends StatelessWidget {
+  // 1080 x 1920 pixels -> meizu
+  // 1080 x 2340 pixels -> oneplus 7
+
   const GredDescription({
     Key key,
     @required this.item,
@@ -159,74 +163,95 @@ class GredDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: kColorWhite,
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('${item.description}', style: bodyText1(context)),
+    double height = MediaQuery.of(context).size.height *
+        MediaQuery.of(context).devicePixelRatio;
+    double width = MediaQuery.of(context).size.width *
+        MediaQuery.of(context).devicePixelRatio;
+
+    bool isWideScreenPortrait = height > 2000;
+    bool isWideSceenLandscape = width > 2000;
+
+    return OrientationBuilder(
+      builder: (BuildContext context, Orientation orientation) {
+        return Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: kColorWhite,
+            borderRadius: BorderRadius.circular(30.0),
           ),
-          RecipeList(
-            tiles: item.ingredients,
-            displayImage: false,
-            direction: Axis.horizontal,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: ListView(
+                children: [
+                  Padding(
+                    padding: isWideScreenPortrait || isWideSceenLandscape
+                        ? const EdgeInsets.fromLTRB(25, 15, 25, 0)
+                        : const EdgeInsets.all(16.0),
+                    child: ExpandableText('${item.description}',
+                        trimLines: orientation == Orientation.portrait ? 8 : 2),
+                  ),
+                  RecipeList(
+                      maxItems: orientation == Orientation.portrait ? 3 : 2,
+                      tiles: item.ingredients,
+                      displayImage:
+                          isWideSceenLandscape || isWideScreenPortrait,
+                      direction: Axis.horizontal),
+                  // Spacer(),
+                ],
+              )),
+              if (isAccent)
+                FutureBuilder(
+                    future: checkUserSkill(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      if (snapshot.hasData) {
+                        return snapshot.data == "NOVICE"
+                            ? Container(
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(30.0),
+                                      bottomRight: Radius.circular(30.0)),
+                                  color: kColorAccent,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () => {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => HelpDialog(index)),
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.play_circle_outline,
+                                        size: 40,
+                                        color: kColorSecondary,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          '${item.help.videoTitle}',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          style: bodyText1(context),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink();
+                      } else
+                        return SizedBox.shrink();
+                    }),
+            ],
           ),
-          Spacer(),
-          if (isAccent)
-            FutureBuilder(
-                future: checkUserSkill(),
-                builder:
-                    (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  if (snapshot.hasData) {
-                    return snapshot.data == "NOVICE"
-                        ? Container(
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(30.0),
-                                  bottomRight: Radius.circular(30.0)),
-                              color: kColorAccent,
-                            ),
-                            child: GestureDetector(
-                              onTap: () => {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => HelpDialog(index)),
-                              },
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.info_outline,
-                                    size: 40,
-                                    color: kColorSecondary,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      '${item.help.videoTitle}',
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: bodyText2(context),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        : SizedBox.shrink();
-                  } else
-                    return SizedBox.shrink();
-                }),
-        ],
-      ),
+        );
+      },
     );
   }
 }

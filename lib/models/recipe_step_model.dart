@@ -35,7 +35,7 @@ class RecipeStepModel {
         help = json.containsKey('help')
             ? RecipeHelpModel.fromMap(json['help'])
             : null,
-        timeEstimated = json['timeEstimdated'],
+        timeEstimated = json['timeEstimated'],
         overallRemainingTimeFromHere = json['overallRemainingTimeFromHere'];
 
   Map<String, dynamic> toMap() => {

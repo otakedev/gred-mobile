@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,7 +7,9 @@ import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
+import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/vocal_popup.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +25,25 @@ class RecipeStep extends StatelessWidget {
     var item = context.select<RecipeStepProvider, RecipeStepModel>(
       (provider) => provider.findByIndex(index),
     );
+
+    var isVocalEnabled = context.select<RecipeStepProvider, bool>(
+      (provider) => provider.isVocalEnabled,
+    );
+
+    var isDisabled = false;
+
+    context.select<SpeechProvider, bool>((provider) {
+      if (!provider.isActive && isVocalEnabled && !isDisabled) {
+        isDisabled = true;
+        Timer(
+          // Duration(seconds: item.timeEstimated),
+          // mocked
+          Duration(seconds: 5),
+          () => openAskVocalDialog(context),
+        );
+      }
+      return provider.isActive;
+    });
 
     bool isHelpAvailable = item.help != null;
 
@@ -269,4 +291,22 @@ class GredImage extends StatelessWidget {
       ),
     );
   }
+}
+
+void openAskVocalDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => VocalPopup(
+      text:
+          "Il semblerait que vous êtes inactif, voulez-vous activer le mode vocal ?",
+      onNo: () => {
+        context.read<RecipeStepProvider>().isVocalEnabled = false,
+        context.read<SpeechProvider>().stopListening(),
+      },
+      onYes: () => {
+        context.read<RecipeStepProvider>().isVocalEnabled = false,
+        context.read<SpeechProvider>().startListening(),
+      },
+    ),
+  );
 }

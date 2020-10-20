@@ -193,6 +193,7 @@ class GredDescription extends StatelessWidget {
                         trimLines: orientation == Orientation.portrait ? 8 : 2),
                   ),
                   RecipeList(
+                      index: index,
                       maxItems: orientation == Orientation.portrait ? 3 : 2,
                       tiles: item.ingredients,
                       displayImage:

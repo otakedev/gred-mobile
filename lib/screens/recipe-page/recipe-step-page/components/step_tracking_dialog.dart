@@ -6,8 +6,8 @@ import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
 
-class StepTrakingDialog extends StatelessWidget {
-  const StepTrakingDialog(this._currentStep, {Key key}) : super(key: key);
+class StepTrackingDialog extends StatelessWidget {
+  const StepTrackingDialog(this._currentStep, {Key key}) : super(key: key);
   final int _currentStep;
 
   @override

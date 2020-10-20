@@ -103,7 +103,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
         return provider.command;
       }
       _isVocalInAction = true;
-      Timer(Duration(seconds: 1), () => _isVocalInAction = false);
+      Timer(Duration(milliseconds: 500), () => _isVocalInAction = false);
       if (provider.command == Command.NEXT) {
         _updatePage(_nextPage())();
       } else if (provider.command == Command.PREVIOUS) {

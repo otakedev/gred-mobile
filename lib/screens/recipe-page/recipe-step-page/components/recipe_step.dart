@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/components/draw/DownTriangleClipper.dart';
 import 'package:gred_mobile/components/expandable_text.dart';
+import 'package:gred_mobile/core/global_key.dart';
 import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
@@ -16,15 +17,28 @@ import 'package:provider/provider.dart';
 
 import 'help_dialog.dart';
 
-class RecipeStep extends StatelessWidget {
+class RecipeStep extends StatefulWidget {
   const RecipeStep(this.index, {Key key}) : super(key: key);
 
   final int index;
 
   @override
+  _RecipeStepState createState() => _RecipeStepState();
+}
+
+class _RecipeStepState extends State<RecipeStep> {
+  Timer _timer;
+
+  @override
+  void dispose() {
+    if (_timer != null) _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var item = context.select<RecipeStepProvider, RecipeStepModel>(
-      (provider) => provider.findByIndex(index),
+      (provider) => provider.findByIndex(widget.index),
     );
 
     var isVocalEnabled = context.select<RecipeStepProvider, bool>(
@@ -36,7 +50,8 @@ class RecipeStep extends StatelessWidget {
     context.select<SpeechProvider, bool>((provider) {
       if (!provider.isActive && isVocalEnabled && !isDisabled) {
         isDisabled = true;
-        Timer(
+        if (_timer != null) _timer.cancel();
+        _timer = Timer(
           // Duration(seconds: item.timeEstimated),
           // mocked
           Duration(seconds: 5),
@@ -70,7 +85,7 @@ class RecipeStep extends StatelessWidget {
                               child: GredDescription(
                                 item: item,
                                 isAccent: isHelpAvailable,
-                                index: index,
+                                index: widget.index,
                               ),
                             ),
                           ],
@@ -87,7 +102,7 @@ class RecipeStep extends StatelessWidget {
                               child: GredDescription(
                                 item: item,
                                 isAccent: isHelpAvailable,
-                                index: index,
+                                index: widget.index,
                               ),
                             ),
                           ],
@@ -119,7 +134,7 @@ class RecipeStep extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text("$index",
+            child: Text("${widget.index}",
                 style: TextStyle(fontSize: 40, color: kColorPrimary)),
           ),
         ),
@@ -321,7 +336,7 @@ class GredImage extends StatelessWidget {
 
 void openAskVocalDialog(BuildContext context) {
   showDialog(
-    context: context,
+    context: scaffoldVocalDialogKey.currentContext,
     builder: (_) => VocalPopup(
       text:
           "Il semblerait que vous êtes inactif, voulez-vous activer le mode vocal ?",

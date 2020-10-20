@@ -17,14 +17,19 @@ class SpeechProvider extends ChangeNotifier {
   var _localeId = "en_US"; //fr_CA or en_US
   bool _hasSpeech = false;
   bool _isActive = false;
+  bool _wasActive = false;
   Command _command = Command.NONE;
 
   get level => _level;
   get hasSpeech => _hasSpeech;
   get isActive => _isActive;
   get command => _command;
+  get wasActive => _wasActive;
 
-  void initSpeech() async {
+  Future<void> initSpeech() async {
+    if (_hasSpeech) {
+      return;
+    }
     bool hasSpeech = await speech.initialize(
       onError: errorListener,
       onStatus: statusListener,
@@ -46,10 +51,30 @@ class SpeechProvider extends ChangeNotifier {
     await platform.invokeMethod('setStreamMusicUnmute');
   }
 
-  void startListening() async {
-    if (!_hasSpeech) {
-      initSpeech();
+  void restoreLastState() {
+    if (_wasActive) {
+      activeListening();
+    } else {
+      stopListening();
     }
+  }
+
+  void activeListening() {
+    _isActive = true;
+    _wasActive = true;
+    notifyListeners();
+    startListening();
+  }
+
+  void disactiveListening() {
+    _isActive = false;
+    _wasActive = false;
+    notifyListeners();
+    stopListening();
+  }
+
+  void startListening() async {
+    await initSpeech();
     speech.listen(
         onResult: resultListener,
         listenFor: Duration(minutes: 10),
@@ -60,8 +85,6 @@ class SpeechProvider extends ChangeNotifier {
         listenMode: ListenMode.confirmation);
     await Future.delayed(Duration(milliseconds: 50));
     await muteSound();
-    _isActive = true;
-    notifyListeners();
   }
 
   void restartListening() async {
@@ -78,8 +101,6 @@ class SpeechProvider extends ChangeNotifier {
   void stopListening() async {
     await unmuteSound();
     speech.stop();
-    _isActive = false;
-    notifyListeners();
   }
 
   void soundLevelListener(double level) {
@@ -88,9 +109,7 @@ class SpeechProvider extends ChangeNotifier {
 
   void errorListener(SpeechRecognitionError error) async {
     await Future.delayed(Duration(milliseconds: 50));
-    if (!_hasSpeech) {
-      initSpeech();
-    }
+    await initSpeech();
     await Future.delayed(Duration(milliseconds: 50));
     restartListening();
   }
@@ -123,9 +142,9 @@ class SpeechProvider extends ChangeNotifier {
 
   void switchListeningMode() {
     if (_isActive) {
-      stopListening();
+      disactiveListening();
     } else {
-      startListening();
+      activeListening();
     }
   }
 }

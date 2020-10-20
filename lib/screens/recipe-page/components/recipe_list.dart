@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gred_mobile/core/text_style.dart';
+import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/models/tiles_model.dart';
+import 'package:gred_mobile/providers/recipe_provider.dart';
+import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/step_tracking_dialog.dart';
 import 'package:gred_mobile/theme/colors.dart';
+import 'package:provider/provider.dart';
 
 class RecipeList extends StatelessWidget {
   const RecipeList(
@@ -11,7 +16,8 @@ class RecipeList extends StatelessWidget {
       @required this.tiles,
       this.displayImage = true,
       this.direction = Axis.vertical,
-      this.maxItems})
+      this.maxItems,
+      int this.index})
       : super(key: key);
 
   final String title;
@@ -19,6 +25,7 @@ class RecipeList extends StatelessWidget {
   final bool displayImage;
   final List<TileModel> tiles;
   final int maxItems;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +44,7 @@ class RecipeList extends StatelessWidget {
         borderRadius: BorderRadius.circular(30.0),
       ),
       child: GredListTile(
+          index: index,
           title: title,
           tiles: copy,
           displayImage: displayImage,
@@ -55,6 +63,7 @@ class GredListTile extends StatelessWidget {
       this.direction,
       this.displayImage,
       this.maxItems,
+      this.index,
       this.trueLength})
       : super(key: key);
 
@@ -62,6 +71,7 @@ class GredListTile extends StatelessWidget {
   final Axis direction;
   final bool displayImage;
   final int maxItems;
+  final int index;
   final int trueLength;
   final List<TileModel> tiles;
 
@@ -101,10 +111,24 @@ class GredListTile extends StatelessWidget {
       if (maxItems < trueLength) {
         ingredientsWidgets.add(Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "...",
-            style: headline6(context),
-          ),
+          child: index != null
+              ? RaisedButton(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    "...",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  color: kColorSecondary,
+                  onPressed: () => {
+                        showDialog(
+                            context: context,
+                            builder: (_) => StepTrackingDialog(index)),
+                      },
+                  shape: CircleBorder())
+              : Text(
+                  "...",
+                  style: headline6(context),
+                ),
         ));
       }
     }

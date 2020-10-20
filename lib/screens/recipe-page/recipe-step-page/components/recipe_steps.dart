@@ -200,6 +200,6 @@ class _RecipeStepsState extends State<RecipeSteps> {
 
   void Function() trackStepDialog(BuildContext context) {
     return () => showDialog(
-        context: context, builder: (_) => StepTrakingDialog(_currentPage));
+        context: context, builder: (_) => StepTrackingDialog(_currentPage));
   }
 }

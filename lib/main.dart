@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/providers/skill_adaptation_provider.dart';
 import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-list-page/recipe_list_page.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/recipe_step_page.dart';
@@ -15,6 +16,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => RecipeProvider()),
         ChangeNotifierProvider(create: (_) => SpeechProvider()),
+        ChangeNotifierProvider(create: (_) => SkillAdaptationProvider()),
         ChangeNotifierProxyProvider<RecipeProvider, RecipeStepProvider>(
           create: (context) => RecipeStepProvider(),
           update: (context, from, to) {

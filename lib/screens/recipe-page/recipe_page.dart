@@ -9,6 +9,7 @@ import 'package:gred_mobile/screens/recipe-page/components/recipe.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:gred_mobile/theme/style.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 
 class RecipePage extends StatelessWidget {
   const RecipePage({Key key}) : super(key: key);
@@ -34,6 +35,7 @@ class RecipePage extends StatelessWidget {
           size: 20 + offset,
         ),
         onPressed: () {
+          Wakelock.enable();
           if (context.read<RecipeStepProvider>().isVocalEnabled) {
             Navigator.pushNamed(context, '/vocal-dialog');
           } else {

@@ -4,6 +4,7 @@ import 'package:gred_mobile/components/video_holder.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_help_model.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/providers/skill_adaptation_provider.dart';
 import 'package:provider/provider.dart';
 
 class HelpDialog extends StatelessWidget {
@@ -15,6 +16,8 @@ class HelpDialog extends StatelessWidget {
     var recipeHelp = context.select<RecipeStepProvider, RecipeHelpModel>(
       (provider) => provider.findByIndex(_currentStep).help,
     );
+
+    context.watch<SkillAdaptationProvider>().detectHelpAsked();
 
     return recipeHelp != null
         ? OrientationBuilder(

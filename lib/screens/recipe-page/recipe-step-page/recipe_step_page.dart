@@ -6,6 +6,7 @@ import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_steps.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 
 class RecipeStepPage extends StatelessWidget {
   const RecipeStepPage({Key key}) : super(key: key);
@@ -31,6 +32,7 @@ class RecipeStepPage extends StatelessWidget {
               onPressed: () => {
                 context.read<SpeechProvider>().stopListening(),
                 Navigator.pop(context),
+                Wakelock.disable()
               },
             ),
           )),

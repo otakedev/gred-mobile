@@ -11,6 +11,7 @@ class RecipeList extends StatelessWidget {
     Key key,
     this.title,
     @required this.tiles,
+    this.fullLenght = false,
     this.displayImage = true,
     this.direction = Axis.vertical,
     this.maxItems,
@@ -23,6 +24,7 @@ class RecipeList extends StatelessWidget {
   final List<TileModel> tiles;
   final int maxItems;
   final int index;
+  final bool fullLenght;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class RecipeList extends StatelessWidget {
         borderRadius: BorderRadius.circular(30.0),
       ),
       child: GredListTile(
+          fullLenght: fullLenght,
           index: index,
           title: title,
           tiles: copy,
@@ -53,16 +56,17 @@ class RecipeList extends StatelessWidget {
 }
 
 class GredListTile extends StatelessWidget {
-  const GredListTile(
-      {Key key,
-      this.title,
-      @required this.tiles,
-      this.direction,
-      this.displayImage,
-      this.maxItems,
-      this.index,
-      this.trueLength})
-      : super(key: key);
+  const GredListTile({
+    Key key,
+    this.title,
+    @required this.tiles,
+    this.direction,
+    this.displayImage,
+    this.maxItems,
+    this.index,
+    this.trueLength,
+    this.fullLenght,
+  }) : super(key: key);
 
   final String title;
   final Axis direction;
@@ -71,6 +75,7 @@ class GredListTile extends StatelessWidget {
   final int index;
   final int trueLength;
   final List<TileModel> tiles;
+  final bool fullLenght;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +145,11 @@ class GredListTile extends StatelessWidget {
                 ),
               if (displayImage) SizedBox(width: 20),
               Container(
-                width: (width < 1500 || height < 1500) ? 80 : 160,
+                width: fullLenght
+                    ? 200
+                    : (width < 1500 || height < 1500)
+                        ? 80
+                        : 160,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

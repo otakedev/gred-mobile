@@ -29,7 +29,7 @@ class VocalDialog extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: Text(
-                "Voulez-vous activer le mode vocal pour cette recette",
+                "Voulez-vous activer le mode vocal pour cette recette. Dites \"Next\" ou \"Back\" pour changer les étapes.",
                 style: TextStyle(color: kColorWhite, fontSize: 25),
               ),
             ),

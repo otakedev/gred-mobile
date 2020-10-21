@@ -89,6 +89,7 @@ class Recipe extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: RecipeList(
+                  fullLenght: true,
                   tiles: recipe.ingredients,
                   title: "Ingredients",
                   direction: orientation == Orientation.portrait
@@ -99,6 +100,7 @@ class Recipe extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: RecipeList(
+                    fullLenght: true,
                     tiles: recipe.utensils,
                     title: "Ustensiles",
                     direction: orientation == Orientation.portrait
@@ -122,8 +124,6 @@ class Recipe extends StatelessWidget {
                         checkUserSkill().then((value) => {
                               if (value == "EXPERT")
                                 {
-                                  print(
-                                      "RESETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"),
                                   context
                                       .read<SkillAdaptationProvider>()
                                       .resetHelpAsk()

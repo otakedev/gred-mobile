@@ -44,9 +44,34 @@ const RECIPES_MOCK = [
             "subtitle": "70g"
           },
           {
+            "leading": "assets/images/leading/farine.png",
+            "title": "Farine",
+            "subtitle": "70g"
+          },
+          {
+            "leading": "assets/images/leading/farine.png",
+            "title": "Farine",
+            "subtitle": "70g"
+          },
+          {
+            "leading": "assets/images/leading/farine.png",
+            "title": "Farine",
+            "subtitle": "70g"
+          },
+          {
+            "leading": "assets/images/leading/farine.png",
+            "title": "Farine",
+            "subtitle": "70g"
+          },
+          {
+            "leading": "assets/images/leading/farine.png",
+            "title": "Farine",
+            "subtitle": "70g"
+          },
+          {
             "leading": "assets/images/leading/poudre_lever.png",
             "title": "Poudre à lever",
-            "subtitle": "1 cuillère à café"
+            "subtitle": "1 c.à.c"
           },
         ],
       },
@@ -57,24 +82,16 @@ const RECIPES_MOCK = [
             "Ajouter l’essence de vanille. Bien fouetter jusqu’à obtention d’un mélange blanchi et mousseux.",
         "timeEstimated": 10,
         "overallRemainingTimeFromHere": 45,
-        "help": {
-          "title": "Comment éviter les grumeaux",
-          "content":
-              "Il est nécessaire d’ajouter le lait très progressivement dans la pâte afin que la farine ait le temps de l’assimiler. Il est conseillé de verser en 4 ou 5 fois sans jamais s'arrêter de fouetter.",
-          "videoSource":
-              "https://github.com/Betsara-MARCELLIN/video_test/raw/main/no-grumeaux.mp4",
-          "videoTitle": "Comment éviter les grumeaux",
-        },
         "ingredients": [
           {
             "leading": "assets/images/leading/extrait_vanille.png",
             "title": "Extrait de vanille liquide",
-            "subtitle": "1 cuillère à café"
+            "subtitle": "1 c.à.c"
           },
           {
             "leading": "assets/images/leading/lait.png",
             "title": "Lait",
-            "subtitle": "4 cuillères à soupe"
+            "subtitle": "4 c.à.s"
           },
           {
             "leading": "assets/images/leading/farine.png",

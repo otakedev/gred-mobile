@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gred_mobile/models/recipe_model.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
+import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/components/recipe.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +29,12 @@ class RecipePage extends StatelessWidget {
         backgroundColor: kColorPrimary,
         icon: FaIcon(FontAwesomeIcons.cookie, color: kColorWhite),
         onPressed: () {
-          Navigator.pushNamed(context, '/vocal-dialog');
+          if (context.read<RecipeStepProvider>().isVocalEnabled) {
+            Navigator.pushNamed(context, '/vocal-dialog');
+          } else {
+            context.read<SpeechProvider>().restoreLastState();
+            Navigator.pushNamed(context, '/steps');
+          }
         },
       ),
     );

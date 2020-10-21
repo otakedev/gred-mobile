@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/core/global_key.dart';
 import 'package:gred_mobile/models/recipe_model.dart';
 import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/speech_provider.dart';
@@ -16,6 +17,7 @@ class RecipeStepPage extends StatelessWidget {
     );
 
     return Scaffold(
+      key: scaffoldVocalDialogKey,
       appBar: AppBar(
           centerTitle: true,
           title: Text('${recipe?.title ?? "Recipe"}'),

@@ -20,7 +20,7 @@ class RecipeStepProvider extends ChangeNotifier {
   }
 
   set isVocalEnabled(bool isEnable) {
-    _isVocalEnabled = false;
+    _isVocalEnabled = isEnable;
     notifyListeners();
   }
 }

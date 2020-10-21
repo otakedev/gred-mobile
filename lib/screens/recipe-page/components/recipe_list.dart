@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gred_mobile/core/text_style.dart';
-import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/models/tiles_model.dart';
-import 'package:gred_mobile/providers/recipe_provider.dart';
-import 'package:gred_mobile/providers/recipe_step_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/step_tracking_dialog.dart';
 import 'package:gred_mobile/theme/colors.dart';
-import 'package:provider/provider.dart';
 
 class RecipeList extends StatelessWidget {
   const RecipeList(
@@ -135,6 +131,7 @@ class GredListTile extends StatelessWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (title != null) Text("$title", style: headline6(context)),
         Wrap(

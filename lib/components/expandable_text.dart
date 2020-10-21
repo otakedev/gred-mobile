@@ -1,12 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/theme/colors.dart';
 
-/**
- * CODE INSPIRED BY THE BELOW SOURCE:
- * https://medium.com/@prafullkumar77/how-to-set-read-more-less-in-flutter-d601cf313a33
- */
+/// CODE INSPIRED BY THE BELOW SOURCE:
+/// https://medium.com/@prafullkumar77/how-to-set-read-more-less-in-flutter-d601cf313a33
 
 class ExpandableText extends StatefulWidget {
   const ExpandableText(this.text, {Key key, this.trimLines = 2, this.style})
@@ -31,7 +28,6 @@ class ExpandableTextState extends State<ExpandableText> {
   Widget build(BuildContext context) {
     // final DefaultTextStyle defaultTextStyle = DefaultTextStyle.of(context);
     final colorClickableText = Colors.blue;
-    final widgetColor = Colors.black;
     TextSpan link = TextSpan(
         text: _readMore ? "... lire plus" : " lire moins",
         style: TextStyle(color: colorClickableText, fontSize: 20),
@@ -69,9 +65,6 @@ class ExpandableTextState extends State<ExpandableText> {
         if (textPainter.didExceedMaxLines) {
           textSpan = TextSpan(
             text: _readMore ? widget.text.substring(0, endIndex) : widget.text,
-            // style: TextStyle(
-            //   color: widgetColor,
-            // ),
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 20,

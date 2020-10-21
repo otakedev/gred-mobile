@@ -33,16 +33,22 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gred App',
-      theme: appTheme(),
-      initialRoute: '/recipes',
-      routes: {
-        '/recipes': (context) => RecipeListPage(),
-        '/recipe': (context) => RecipePage(),
-        '/steps': (context) => RecipeStepPage(),
-        '/vocal-dialog': (context) => VocalPage(),
-      },
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      return MaterialApp(
+        title: 'Gred App',
+        theme: constraints.maxWidth > 1000 || constraints.maxHeight > 1000
+            ? (constraints.maxWidth > 1600 || constraints.maxHeight > 1600
+                ? appTheme(fontOffset: 20)
+                : appTheme(fontOffset: 10))
+            : appTheme(),
+        initialRoute: '/recipes',
+        routes: {
+          '/recipes': (context) => RecipeListPage(),
+          '/recipe': (context) => RecipePage(),
+          '/steps': (context) => RecipeStepPage(),
+          '/vocal-dialog': (context) => VocalPage(),
+        },
+      );
+    });
   }
 }

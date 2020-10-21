@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gred_mobile/components/draw/DownTriangleClipper.dart';
-import 'package:gred_mobile/components/expandable_text.dart';
 import 'package:gred_mobile/core/global_key.dart';
 import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/core/text_style.dart';
@@ -183,8 +183,10 @@ class GredDescription extends StatelessWidget {
     double width = MediaQuery.of(context).size.width *
         MediaQuery.of(context).devicePixelRatio;
 
-    bool isWideScreenPortrait = height > 2000;
-    bool isWideSceenLandscape = width > 2000;
+    Orientation deviceOrientation = MediaQuery.of(context).orientation;
+
+    bool isWideScreenPortrait = height >= 2000;
+    bool isWideScreenLandscape = width >= 2000;
 
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
@@ -198,25 +200,55 @@ class GredDescription extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                  child: ListView(
-                children: [
-                  Padding(
-                    padding: isWideScreenPortrait || isWideSceenLandscape
-                        ? const EdgeInsets.fromLTRB(25, 15, 25, 0)
-                        : const EdgeInsets.all(16.0),
-                    child: ExpandableText('${item.description}',
-                        trimLines: orientation == Orientation.portrait ? 8 : 2),
-                  ),
-                  RecipeList(
-                      index: index,
-                      maxItems: orientation == Orientation.portrait ? 3 : 2,
-                      tiles: item.ingredients,
-                      displayImage:
-                          isWideSceenLandscape || isWideScreenPortrait,
-                      direction: Axis.horizontal),
-                  // Spacer(),
-                ],
-              )),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: isWideScreenPortrait || isWideScreenLandscape
+                          ? const EdgeInsets.fromLTRB(25, 15, 25, 0)
+                          : const EdgeInsets.all(16.0),
+                      child: AutoSizeText(
+                        '${item.description}',
+                        style: headline6(context),
+                        maxLines: deviceOrientation == Orientation.portrait
+                            ? (height <= 900
+                                ? 4
+                                : isWideScreenPortrait
+                                    ? 10
+                                    : (item.ingredients.length < 3 ? 8 : 4))
+                            : (width <= 900
+                                ? 4
+                                : (isWideScreenLandscape
+                                    ? 10
+                                    : (item.ingredients.length < 3 ? 6 : 3))),
+                      ),
+                    ),
+                    width > 800
+                        ? FutureBuilder(
+                            future: checkUserSkill(),
+                            builder: (context, snapshot) {
+                              return RecipeList(
+                                  index: index,
+                                  maxItems: (deviceOrientation ==
+                                          Orientation.portrait
+                                      ? (isWideScreenPortrait
+                                          ? 10
+                                          : (snapshot.data == "NOVICE" ? 4 : 8))
+                                      : (isWideScreenLandscape
+                                          ? 10
+                                          : (snapshot.data == "NOVICE"
+                                              ? 2
+                                              : 4))),
+                                  tiles: item.ingredients,
+                                  displayImage: isWideScreenLandscape ||
+                                      isWideScreenPortrait,
+                                  direction: Axis.horizontal);
+                            },
+                          )
+                        : SizedBox(),
+                  ],
+                ),
+              ),
               if (isAccent)
                 FutureBuilder(
                     future: checkUserSkill(),

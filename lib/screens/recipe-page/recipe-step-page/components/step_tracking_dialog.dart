@@ -40,35 +40,44 @@ class StepTrackingDialog extends StatelessWidget {
                   itemCount: items.length,
                   itemBuilder: (BuildContext context, int index) {
                     if (index >= _currentStep) {
-                      return Column(children: [
-                        Row(children: [
-                          Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: CircleAvatar(
-                                child: Text(index.toString(),
-                                    style: TextStyle(color: kColorWhite)),
-                                backgroundColor: index == _currentStep
-                                    ? kColorPrimary
-                                    : kColorSecondary,
-                              )),
-                          Expanded(
-                              child: Padding(
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: Text(items[index].title,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: index == _currentStep
-                                              ? kColorPrimary
-                                              : kColorSecondary))))
-                        ]),
-                        RecipeList(
-                            tiles: items[index].ingredients,
-                            direction: orientation == Orientation.portrait
-                                ? Axis.vertical
-                                : Axis.horizontal)
-                      ]);
+                                  child: CircleAvatar(
+                                    child: Text(index.toString(),
+                                        style: TextStyle(color: kColorWhite)),
+                                    backgroundColor: index == _currentStep
+                                        ? kColorPrimary
+                                        : kColorSecondary,
+                                  )),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    items[index].title,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: index == _currentStep
+                                            ? kColorPrimary
+                                            : kColorSecondary),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          RecipeList(
+                              tiles: items[index].ingredients,
+                              direction: orientation == Orientation.portrait
+                                  ? Axis.vertical
+                                  : Axis.horizontal)
+                        ],
+                      );
                     } else {
                       return SizedBox.shrink();
                     }

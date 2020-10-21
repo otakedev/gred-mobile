@@ -5,6 +5,7 @@ import 'package:gred_mobile/components/microphone.dart';
 import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
+import 'package:gred_mobile/providers/skill_adaptation_provider.dart';
 import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_step.dart';
@@ -96,6 +97,48 @@ class _RecipeStepsState extends State<RecipeSteps> {
     _recipes = context.select<RecipeStepProvider, List<RecipeStepModel>>(
       (provider) => provider.steps,
     );
+
+    var askUserToGetBackToExpert = context
+        .select<SkillAdaptationProvider, bool>((provider) => provider.changed);
+
+    var needToShowSnackBar = context
+        .select<SkillAdaptationProvider, bool>((provider) => provider.askAgain);
+
+    if (askUserToGetBackToExpert && needToShowSnackBar) {
+      context.watch<SkillAdaptationProvider>().doNotAskAgain();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Row(children: <Widget>[
+            Icon(Icons.info_outline),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Text(
+                "Suite à une demande d'aide fréquente, les aides supplémentaires ont été activé.",
+                overflow: TextOverflow.visible,
+              ),
+            ),
+          ]),
+          duration: Duration(seconds: 5),
+          action: SnackBarAction(
+            label: "Désactiver",
+            textColor: kColorPrimary,
+            onPressed: () {
+              chooseExpert();
+              setState(() {});
+            },
+          ),
+        ));
+      });
+
+      Future.delayed(Duration(seconds: 5), () {
+        Scaffold.of(context).hideCurrentSnackBar();
+        context.watch<SkillAdaptationProvider>().resetHelpAsk();
+      }); //This is a workaround for this bug : https://github.com/flutter/flutter/issues/33761
+
+    }
 
     context.select<SpeechProvider, Command>((provider) {
       // I call that DIY
@@ -194,8 +237,12 @@ class _RecipeStepsState extends State<RecipeSteps> {
   }
 
   void Function() helpDialog(BuildContext context) {
-    return () =>
-        showDialog(context: context, builder: (_) => HelpDialog(_currentPage));
+    return () => {
+          showDialog(
+              context: context, builder: (_) => HelpDialog(_currentPage)),
+          setState(
+              () {}) //Bad for performance, but the only I found to rebuild the widget according to skill level
+        };
   }
 
   void Function() trackStepDialog(BuildContext context) {

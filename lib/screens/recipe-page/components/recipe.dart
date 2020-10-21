@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gred_mobile/core/storage.dart';
+import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/core/text_style.dart';
 import 'package:gred_mobile/models/recipe_model.dart';
+import 'package:gred_mobile/providers/skill_adaptation_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/components/cook_level.dart';
 import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
 import 'package:gred_mobile/theme/colors.dart';
+import 'package:provider/provider.dart';
 
 class Recipe extends StatelessWidget {
   const Recipe(RecipeModel recipe, {Key key})
@@ -110,12 +112,24 @@ class Recipe extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     RaisedButton(
-                      onPressed: () => writeStorage("user_skill", "NOVICE"),
+                      onPressed: () => chooseNovice(),
                       child: Text("Novice"),
                       color: Colors.yellow,
                     ),
                     RaisedButton(
-                      onPressed: () => writeStorage("user_skill", "EXPERT"),
+                      onPressed: () => {
+                        chooseExpert(),
+                        checkUserSkill().then((value) => {
+                              if (value == "EXPERT")
+                                {
+                                  print(
+                                      "RESETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"),
+                                  context
+                                      .read<SkillAdaptationProvider>()
+                                      .resetHelpAsk()
+                                }
+                            })
+                      },
                       child: Text("Expert"),
                       color: Colors.yellow,
                     )

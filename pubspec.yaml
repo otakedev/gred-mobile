@@ -34,6 +34,7 @@ dependencies:
   chewie: ^0.9.10
   speech_to_text: ^2.7.0
   avatar_glow: ^1.2.0
+  get: ^3.13.2
 
 dev_dependencies:
   flutter_test:

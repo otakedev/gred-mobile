@@ -35,6 +35,7 @@ dependencies:
   speech_to_text: ^2.7.0
   avatar_glow: ^1.2.0
   get: ^3.13.2
+  wakelock: ^0.1.2
 
 dev_dependencies:
   flutter_test:

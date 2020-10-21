@@ -240,8 +240,14 @@ class GredDescription extends StatelessWidget {
                                               ? 2
                                               : 4))),
                                   tiles: item.ingredients,
-                                  displayImage: isWideScreenLandscape ||
-                                      isWideScreenPortrait,
+                                  displayImage:
+                                      (deviceOrientation == Orientation.portrait
+                                          ? (isWideScreenPortrait
+                                              ? true
+                                              : (item.help == null))
+                                          : (isWideScreenLandscape
+                                              ? false
+                                              : (item.help == null))),
                                   direction: Axis.horizontal);
                             },
                           )

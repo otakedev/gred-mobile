@@ -121,10 +121,11 @@ class SpeechProvider extends ChangeNotifier {
     if (!result.finalResult) {
       return;
     }
-    if (result.recognizedWords.toLowerCase().contains('next')) {
+    String res = result.recognizedWords.toLowerCase();
+    if (res.contains('next')) {
       this._command = Command.NEXT;
       notifyListeners();
-    } else if (result.recognizedWords.toLowerCase().contains('previous')) {
+    } else if (res.contains('previous') || res.contains('back')) {
       this._command = Command.PREVIOUS;
       notifyListeners();
     } else {

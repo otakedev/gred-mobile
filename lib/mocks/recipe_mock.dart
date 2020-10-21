@@ -2,7 +2,7 @@ const RECIPES_MOCK = [
   {
     "imageUrl": "assets/images/recette-pancake.png",
     "avatarUrl": "assets/images/avatar1.png",
-    "author": "Fang_pen_chao_patissier",
+    "author": "Fang Patissier",
     "difficulty": 1,
     "title": "Pancake Soufflé",
     "description":
@@ -27,9 +27,7 @@ const RECIPES_MOCK = [
           "content":
               "Il est nécessaire d’ajouter le lait très progressivement dans la pâte afin que la farine ait le temps de l’assimiler. Il est conseillé de verser en 4 ou 5 fois sans jamais s'arrêter de fouetter.",
           "videoSource":
-              // "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
               "https://github.com/Betsara-MARCELLIN/video_test/raw/main/no-grumeaux.mp4",
-          // "assets/videos/no-grumeaux.mp4",
           "videoTitle": "Comment éviter les grumeaux",
         },
         "timeEstimated": 3,
@@ -59,6 +57,14 @@ const RECIPES_MOCK = [
             "Ajouter l’essence de vanille. Bien fouetter jusqu’à obtention d’un mélange blanchi et mousseux.",
         "timeEstimated": 10,
         "overallRemainingTimeFromHere": 45,
+        "help": {
+          "title": "Comment éviter les grumeaux",
+          "content":
+              "Il est nécessaire d’ajouter le lait très progressivement dans la pâte afin que la farine ait le temps de l’assimiler. Il est conseillé de verser en 4 ou 5 fois sans jamais s'arrêter de fouetter.",
+          "videoSource":
+              "https://github.com/Betsara-MARCELLIN/video_test/raw/main/no-grumeaux.mp4",
+          "videoTitle": "Comment éviter les grumeaux",
+        },
         "ingredients": [
           {
             "leading": "assets/images/leading/extrait_vanille.png",
@@ -69,6 +75,11 @@ const RECIPES_MOCK = [
             "leading": "assets/images/leading/lait.png",
             "title": "Lait",
             "subtitle": "4 cuillères à soupe"
+          },
+          {
+            "leading": "assets/images/leading/farine.png",
+            "title": "Farine",
+            "subtitle": "10g"
           },
         ],
       },

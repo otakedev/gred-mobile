@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gred_mobile/core/text_style.dart';
@@ -6,15 +7,15 @@ import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/step
 import 'package:gred_mobile/theme/colors.dart';
 
 class RecipeList extends StatelessWidget {
-  const RecipeList(
-      {Key key,
-      this.title,
-      @required this.tiles,
-      this.displayImage = true,
-      this.direction = Axis.vertical,
-      this.maxItems,
-      int this.index})
-      : super(key: key);
+  const RecipeList({
+    Key key,
+    this.title,
+    @required this.tiles,
+    this.displayImage = true,
+    this.direction = Axis.vertical,
+    this.maxItems,
+    this.index,
+  }) : super(key: key);
 
   final String title;
   final Axis direction;
@@ -73,7 +74,54 @@ class GredListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var ingredientsWidgets = [
+    var ingredientsWidgets = ingredientsListWidgets(context);
+
+    if (maxItems != null && maxItems < trueLength) {
+      ingredientsWidgets.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: index != null
+              ? CircleAvatar(
+                  radius: 20,
+                  backgroundColor: kColorSecondary,
+                  child: IconButton(
+                    icon: Icon(Icons.more_horiz, size: 20),
+                    onPressed: () => {
+                      showDialog(
+                          context: context,
+                          builder: (_) => StepTrackingDialog(index)),
+                    },
+                  ),
+                )
+              : Text(
+                  "...",
+                  style: headline6(context),
+                ),
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title != null) Text("$title", style: headline6(context)),
+        Wrap(
+          spacing: 8.0,
+          runSpacing: 8.0,
+          direction: direction,
+          children: ingredientsWidgets,
+        )
+      ],
+    );
+  }
+
+  List<Padding> ingredientsListWidgets(context) {
+    double width = MediaQuery.of(context).size.width *
+        MediaQuery.of(context).devicePixelRatio;
+    double height = MediaQuery.of(context).size.height *
+        MediaQuery.of(context).devicePixelRatio;
+    return [
       for (var i in tiles)
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -91,56 +139,27 @@ class GredListTile extends StatelessWidget {
                   child: Image.asset(i.leading, fit: BoxFit.cover),
                 ),
               if (displayImage) SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(i.title, style: bodyText1(context)),
-                  Text(i.subtitle ?? "", style: bodyText2(context)),
-                ],
-              )
+              Container(
+                width: (width < 1500 || height < 1500) ? 80 : 160,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AutoSizeText(
+                      i.title,
+                      style: bodyText1(context),
+                      maxLines: 1,
+                    ),
+                    AutoSizeText(
+                      i.subtitle ?? "",
+                      style: bodyText2(context),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         )
     ];
-
-    if (maxItems != null) {
-      if (maxItems < trueLength) {
-        ingredientsWidgets.add(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: index != null
-              ? RaisedButton(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    "...",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  color: kColorSecondary,
-                  onPressed: () => {
-                        showDialog(
-                            context: context,
-                            builder: (_) => StepTrackingDialog(index)),
-                      },
-                  shape: CircleBorder())
-              : Text(
-                  "...",
-                  style: headline6(context),
-                ),
-        ));
-      }
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title != null) Text("$title", style: headline6(context)),
-        Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
-          direction: direction,
-          children: ingredientsWidgets,
-        )
-      ],
-    );
   }
 }

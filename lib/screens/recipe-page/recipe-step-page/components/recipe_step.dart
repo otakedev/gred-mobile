@@ -212,12 +212,12 @@ class GredDescription extends StatelessWidget {
                         style: headline6(context),
                         maxLines: deviceOrientation == Orientation.portrait
                             ? (height <= 900
-                                ? 3
+                                ? 2
                                 : isWideScreenPortrait
                                     ? 10
-                                    : (item.ingredients.length < 3 ? 8 : 4))
+                                    : (item.ingredients.length < 3 ? 8 : 3))
                             : (width <= 900
-                                ? 3
+                                ? 2
                                 : (isWideScreenLandscape
                                     ? 10
                                     : (item.ingredients.length < 3 ? 6 : 3))),
@@ -232,13 +232,11 @@ class GredDescription extends StatelessWidget {
                                   maxItems: (deviceOrientation ==
                                           Orientation.portrait
                                       ? (isWideScreenPortrait
-                                          ? (width > 1500 ? 10 : 4)
-                                          : (snapshot.data == "NOVICE" ? 4 : 8))
+                                          ? (width > 1500 ? 10 : 6)
+                                          : (snapshot.data == "NOVICE" ? 2 : 6))
                                       : (isWideScreenLandscape
-                                          ? (height > 1500 ? 9 : 3)
-                                          : (snapshot.data == "NOVICE"
-                                              ? 2
-                                              : 4))),
+                                          ? (height > 1500 ? 9 : 5)
+                                          : 2)),
                                   tiles: item.ingredients,
                                   displayImage:
                                       (deviceOrientation == Orientation.portrait
@@ -259,7 +257,7 @@ class GredDescription extends StatelessWidget {
                       if (snapshot.hasData) {
                         return snapshot.data == "NOVICE"
                             ? Container(
-                                padding: const EdgeInsets.all(16.0),
+                                padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(30.0),
@@ -276,7 +274,7 @@ class GredDescription extends StatelessWidget {
                                     children: [
                                       Icon(
                                         Icons.play_circle_outline,
-                                        size: 40,
+                                        size: 32,
                                         color: kColorSecondary,
                                       ),
                                       SizedBox(

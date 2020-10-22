@@ -6,6 +6,7 @@ import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-list-page/recipe_list_page.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/recipe_step_page.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe_page.dart';
+import 'package:gred_mobile/screens/starting_page.dart';
 import 'package:gred_mobile/screens/vocal-dialog-page/vocal_page.dart';
 import 'package:gred_mobile/theme/style.dart';
 import 'package:provider/provider.dart';
@@ -41,12 +42,13 @@ class MyApp extends StatelessWidget {
                 ? appTheme(fontOffset: 20)
                 : appTheme(fontOffset: 10))
             : appTheme(),
-        initialRoute: '/recipes',
+        initialRoute: '/start',
         routes: {
           '/recipes': (context) => RecipeListPage(),
           '/recipe': (context) => RecipePage(),
           '/steps': (context) => RecipeStepPage(),
           '/vocal-dialog': (context) => VocalPage(),
+          '/start': (context) => StartingPage(),
         },
       );
     });

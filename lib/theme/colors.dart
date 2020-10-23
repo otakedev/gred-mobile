@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // app colors
 const kColorPrimary = const Color(0xFFC96767);
 const kColorSecondary = const Color(0xFF45454C);
+const kColorSecondaryText = const Color(0xFF8F8F93);
 const kColorAccent = const Color(0xFF77DD47);
 const kColorBackground = const Color(0xFFF6F8FD);
 const kColorWhite = const Color(0xFFFFFFFFF);

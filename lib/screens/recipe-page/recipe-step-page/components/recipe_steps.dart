@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:gred_mobile/components/microphone.dart';
 import 'package:gred_mobile/core/preference_access.dart';
 import 'package:gred_mobile/models/recipe_step_model.dart';
-import 'package:gred_mobile/providers/recipe_provider.dart';
 import 'package:gred_mobile/providers/recipe_step_provider.dart';
-import 'package:gred_mobile/screens/recipe-page/components/recipe_list.dart';
+import 'package:gred_mobile/providers/skill_adaptation_provider.dart';
+import 'package:gred_mobile/providers/speech_provider.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/help_dialog.dart';
 import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/recipe_step.dart';
+import 'package:gred_mobile/screens/recipe-page/recipe-step-page/components/step_tracking_dialog.dart';
 import 'package:gred_mobile/theme/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -19,14 +23,20 @@ class RecipeSteps extends StatefulWidget {
 class _RecipeStepsState extends State<RecipeSteps> {
   int _currentPage = 0;
   bool _isHelpVisible = true;
-  List<RecipeStepModel> recipes;
+  bool _isVocalInAction = false;
+  List<RecipeStepModel> _recipes;
 
   PageController _controller = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _onPageViewChange(int page) {
     setState(() {
       _currentPage = page;
-      _isHelpVisible = recipes[page].help != null;
+      _isHelpVisible = _recipes[page].help != null;
     });
   }
 
@@ -84,8 +94,66 @@ class _RecipeStepsState extends State<RecipeSteps> {
       (provider) => provider.stepsCount,
     );
 
-    recipes = context.select<RecipeStepProvider, List<RecipeStepModel>>(
-        (provider) => provider.steps);
+    _recipes = context.select<RecipeStepProvider, List<RecipeStepModel>>(
+      (provider) => provider.steps,
+    );
+
+    var askUserToGetBackToExpert = context
+        .select<SkillAdaptationProvider, bool>((provider) => provider.changed);
+
+    var needToShowSnackBar = context
+        .select<SkillAdaptationProvider, bool>((provider) => provider.askAgain);
+
+    if (askUserToGetBackToExpert && needToShowSnackBar) {
+      context.watch<SkillAdaptationProvider>().doNotAskAgain();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Row(children: <Widget>[
+            Icon(Icons.info_outline),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Text(
+                "Suite à une demande d'aide fréquente, les aides supplémentaires ont été activé.",
+                overflow: TextOverflow.visible,
+              ),
+            ),
+          ]),
+          duration: Duration(seconds: 5),
+          action: SnackBarAction(
+            label: "Désactiver",
+            textColor: kColorPrimary,
+            onPressed: () {
+              chooseExpert();
+              setState(() {});
+            },
+          ),
+        ));
+      });
+
+      Future.delayed(Duration(seconds: 5), () {
+        Scaffold.of(context).hideCurrentSnackBar();
+        context.watch<SkillAdaptationProvider>().resetHelpAsk();
+      }); //This is a workaround for this bug : https://github.com/flutter/flutter/issues/33761
+
+    }
+
+    context.select<SpeechProvider, Command>((provider) {
+      // I call that DIY
+      if (_isVocalInAction == true) {
+        return provider.command;
+      }
+      _isVocalInAction = true;
+      Timer(Duration(milliseconds: 500), () => _isVocalInAction = false);
+      if (provider.command == Command.NEXT) {
+        _updatePage(_nextPage())();
+      } else if (provider.command == Command.PREVIOUS) {
+        _updatePage(_previousPage())();
+      }
+      return provider.command;
+    });
 
     return Stack(
       children: [
@@ -93,7 +161,15 @@ class _RecipeStepsState extends State<RecipeSteps> {
           controller: _controller,
           onPageChanged: _onPageViewChange,
           itemCount: itemsCount,
-          itemBuilder: (context, position) => RecipeStep(position),
+          itemBuilder: (context, position) => Stack(
+            children: [
+              LinearProgressIndicator(
+                value: (_currentPage + 1) / itemsCount,
+                minHeight: 8,
+              ),
+              RecipeStep(position),
+            ],
+          ),
         ),
         Positioned(
           child: Align(
@@ -110,7 +186,7 @@ class _RecipeStepsState extends State<RecipeSteps> {
                   ),
                   stepButton(
                     Icons.menu_book_rounded,
-                    ingredientsDialog(context),
+                    trackStepDialog(context),
                     color: kColorSecondary,
                   ),
                   if (_isHelpVisible)
@@ -142,35 +218,35 @@ class _RecipeStepsState extends State<RecipeSteps> {
             ),
           ),
         ),
+        Align(
+          alignment:
+              Alignment.lerp(Alignment.topLeft, Alignment.bottomLeft, 0.30),
+          child: Selector<SpeechProvider, bool>(
+            selector: (_, model) => model.isActive,
+            shouldRebuild: (prev, next) => next != prev,
+            builder: (context, value, _) => Microphone(
+              isListening: value,
+              onTap: () => {
+                context.read<SpeechProvider>().switchListeningMode(),
+              },
+            ),
+          ),
+        )
       ],
     );
   }
 
   void Function() helpDialog(BuildContext context) {
-    return () =>
-        showDialog(context: context, builder: (_) => HelpDialog(_currentPage));
+    return () => {
+          showDialog(
+              context: context, builder: (_) => HelpDialog(_currentPage)),
+          setState(
+              () {}) //Bad for performance, but the only I found to rebuild the widget according to skill level
+        };
   }
 
-  void Function() ingredientsDialog(BuildContext context) {
-    return () {
-      var ingredients =
-          context.read<RecipeProvider>().selectedRecipe.ingredients;
-      showDialog(
-        context: context,
-        child: SimpleDialog(
-          title: Text("Un oubli ?"),
-          children: [
-            GredListTile(tiles: ingredients),
-            SimpleDialogOption(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                "C'est bon ?",
-                style: TextStyle(color: kColorPrimary),
-              ),
-            ),
-          ],
-        ),
-      );
-    };
+  void Function() trackStepDialog(BuildContext context) {
+    return () => showDialog(
+        context: context, builder: (_) => StepTrackingDialog(_currentPage));
   }
 }
